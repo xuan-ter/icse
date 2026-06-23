@@ -1,0 +1,849 @@
+//! Decoding and Encoding of TIFF Images
+//!
+//! TIFF (Tagged Image File Format) is a versatile image format that supports
+//! lossless and lossy compression.
+//!
+//! # Related Links
+//! * <http://partners.adobe.com/public/developer/tiff/index.html> - The TIFF specification
+use std::io::{BufRead, Seek, Write};
+
+use tiff::decoder::ifd::Value;
+use tiff::decoder::{Decoder, DecodingResult};
+use tiff::tags::Tag;
+
+use crate::color::{ColorType, ExtendedColorType};
+use crate::error::{
+    DecodingError, EncodingError, ImageError, ImageResult, LimitError, LimitErrorKind,
+    ParameterError, ParameterErrorKind, UnsupportedError, UnsupportedErrorKind,
+};
+use crate::io::decoder::DecodedMetadataHint;
+use crate::io::{DecodedImageAttributes, DecoderPreparedImage, FormatAttributes};
+use crate::metadata::Orientation;
+use crate::{utils, ImageDecoder, ImageEncoder, ImageFormat};
+
+const TAG_XML_PACKET: Tag = Tag::Unknown(700);
+const TAG_YCBCR_COEFFICIENTS: Tag = Tag::Unknown(529);
+const TAG_YCBCR_SUBSAMPLING: Tag = Tag::Unknown(530);
+
+/// Decoder for TIFF images.
+pub struct TiffDecoder<R>
+where
+    R: BufRead + Seek,
+{
+    info: ImageState,
+    /// The individual allocations attribute to parts of the decoder.
+    limits: tiff::decoder::Limits,
+    // We only use an Option here so we can call with_limits on the decoder without moving.
+    inner: Option<Decoder<R>>,
+    buffer: DecodingResult,
+}
+
+enum ImageState {
+    Initial,
+    At(ImageInfo),
+    Consumed,
+}
+
+#[derive(Clone, Copy)]
+struct ImageInfo {
+    dimensions: (u32, u32),
+    color_type: ColorType,
+    original_color_type: ExtendedColorType,
+    ycbcr_coefficients: [f32; 3],
+}
+
+impl<R> TiffDecoder<R>
+where
+    R: BufRead + Seek,
+{
+    /// Create a new `TiffDecoder`.
+    pub fn new(r: R) -> Result<TiffDecoder<R>, ImageError> {
+        let inner = Decoder::new(r).map_err(ImageError::from_tiff_decode)?;
+
+        Ok(TiffDecoder {
+            info: ImageState::Initial,
+            limits: tiff::decoder::Limits::default(),
+            inner: Some(inner),
+            buffer: DecodingResult::U8(vec![]),
+        })
+    }
+
+    fn peek_info(&mut self) -> ImageResult<ImageInfo> {
+        let Some(reader) = &mut self.inner else {
+            return Err(ImageError::Parameter(ParameterError::from_kind(
+                ParameterErrorKind::FailedAlready,
+            )));
+        };
+
+        // This image may have been consumed, we should advance.
+        if let ImageState::Consumed = self.info {
+            reader.next_image().map_err(ImageError::from_tiff_decode)?;
+            self.info = ImageState::Initial;
+        }
+
+        if let ImageState::Initial = self.info {
+            self.reset_info_from_current_image()?;
+        }
+
+        let ImageState::At(info) = self.info else {
+            return Err(ImageError::Parameter(ParameterError::from_kind(
+                ParameterErrorKind::FailedAlready,
+            )));
+        };
+
+        Ok(info)
+    }
+
+    fn reset_info_from_current_image(&mut self) -> ImageResult<()> {
+        use tiff::tags::SampleFormat::{Uint, IEEEFP};
+
+        let Some(reader) = &mut self.inner else {
+            return Err(ImageError::Parameter(ParameterError::from_kind(
+                ParameterErrorKind::FailedAlready,
+            )));
+        };
+
+        let dimensions = reader.dimensions().map_err(ImageError::from_tiff_decode)?;
+        let tiff_color_type = reader.colortype().map_err(ImageError::from_tiff_decode)?;
+        let sample_format = reader
+            .image_buffer_layout()
+            .map_err(ImageError::from_tiff_decode)?
+            .sample_format;
+
+        let color_type = match (tiff_color_type, sample_format) {
+            (tiff::ColorType::Gray(1), Uint) => ColorType::L8,
+            (tiff::ColorType::Gray(8), Uint) => ColorType::L8,
+            (tiff::ColorType::Gray(16), Uint) => ColorType::L16,
+            (tiff::ColorType::Gray(32), IEEEFP) => ColorType::L32F,
+            (tiff::ColorType::GrayA(8), Uint) => ColorType::La8,
+            (tiff::ColorType::GrayA(16), Uint) => ColorType::La16,
+            (tiff::ColorType::RGB(8), Uint) => ColorType::Rgb8,
+            (tiff::ColorType::RGB(16), Uint) => ColorType::Rgb16,
+            (tiff::ColorType::RGBA(8), Uint) => ColorType::Rgba8,
+            (tiff::ColorType::RGBA(16), Uint) => ColorType::Rgba16,
+            (tiff::ColorType::CMYK(8), Uint) => ColorType::Rgb8,
+            (tiff::ColorType::CMYK(16), Uint) => ColorType::Rgb16,
+            (tiff::ColorType::RGB(32), IEEEFP) => ColorType::Rgb32F,
+            (tiff::ColorType::RGBA(32), IEEEFP) => ColorType::Rgba32F,
+            (tiff::ColorType::YCbCr(8), Uint) => ColorType::Rgb8,
+            _ => {
+                return Err(ImageError::Unsupported(
+                    UnsupportedError::from_format_and_kind(
+                        ImageFormat::Tiff.into(),
+                        UnsupportedErrorKind::GenericFeature(format!(
+                            "Unsupported TIFF color {tiff_color_type:?} with sample format {sample_format:?}"
+                        )),
+                    ),
+                ));
+            }
+        };
+
+        let original_color_type = match (tiff_color_type, sample_format) {
+            (tiff::ColorType::Gray(1), Uint) => ExtendedColorType::L1,
+            (tiff::ColorType::CMYK(8), Uint) => ExtendedColorType::Cmyk8,
+            (tiff::ColorType::CMYK(16), Uint) => ExtendedColorType::Cmyk16,
+            (tiff::ColorType::YCbCr(8), Uint) => ExtendedColorType::YCbCr8,
+            _ => color_type.into(),
+        };
+
+        let mut ycbcr_coefficients = [0.0; 3];
+        if matches!(tiff_color_type, tiff::ColorType::YCbCr(8)) {
+            check_ycbcr_subsampling(reader)?;
+            ycbcr_coefficients = read_ycbcr_coefficients(reader)?;
+        }
+
+        self.info = ImageState::At(ImageInfo {
+            dimensions,
+            color_type,
+            original_color_type,
+            ycbcr_coefficients,
+        });
+
+        self.redistribute_limits();
+
+        Ok(())
+    }
+
+    fn redistribute_limits(&mut self) {
+        let ImageState::At(info) = &self.info else {
+            return;
+        };
+
+        if self.inner.is_none() {
+            return;
+        }
+
+        let max_alloc = (self.limits.decoding_buffer_size as u64)
+            .saturating_add(self.limits.intermediate_buffer_size as u64);
+
+        let max_intermediate_alloc = max_alloc.saturating_sub(info.total_bytes_buffer());
+        let mut tiff_limits: tiff::decoder::Limits = Default::default();
+        tiff_limits.decoding_buffer_size =
+            usize::try_from(max_alloc - max_intermediate_alloc).unwrap_or(usize::MAX);
+        tiff_limits.intermediate_buffer_size =
+            usize::try_from(max_intermediate_alloc).unwrap_or(usize::MAX);
+        tiff_limits.ifd_value_size = tiff_limits.intermediate_buffer_size;
+
+        self.inner = Some(self.inner.take().unwrap().with_limits(tiff_limits));
+    }
+
+    /// Interleave planes in our `buffer` into `output`.
+    fn interleave_planes(
+        &mut self,
+        info: ImageInfo,
+        layout: tiff::decoder::BufferLayoutPreference,
+        output: &mut [u8],
+    ) -> ImageResult<()> {
+        if info.original_color_type != info.color_type.into() {
+            return Err(ImageError::Unsupported(
+                UnsupportedError::from_format_and_kind(
+                    ImageFormat::Tiff.into(),
+                    UnsupportedErrorKind::GenericFeature(
+                        "Planar TIFF with CMYK color type is not supported".to_string(),
+                    ),
+                ),
+            ));
+        }
+
+        // This only works if we and `tiff` agree on the layout, including the color type, of
+        // the sample matrix.
+        //
+        // TODO: triple buffer in the other case and fixup the planar layout independent of
+        // sample type. Problem description follows:
+        //
+        // That will suck since we can't call `interleave_planes` with a `ColorType` argument,
+        // Changing that parameter to `ExtendedColorType` is a can of worms, and exposing the
+        // underlying generic function is an optimization killer (we may want to help LLVM
+        // optimize this interleaving by SIMD). For LumaAlpha(1) colors we should do the bit
+        // expansion at the same time as interleaving to avoid wasting the memory traversal but
+        // expand-then-interleave is at least clear, albeit an extra buffer required. Meanwhile
+        // for `Cmyk8`/`Cmyk16` our output is smaller than the tiff buffer (4 samples to 3, or
+        // 5 to 4 if we had alpha) and not wanting multiple conversion function implementations
+        // we should interleave-then-expand?
+        //
+        // The hard part of the solution will be managing complexity.
+        let plane_stride = layout.plane_stride.map_or(0, |n| n.get());
+        let bytes = self.buffer.as_buffer(0);
+
+        let planes = bytes
+            .as_bytes()
+            .chunks_exact(plane_stride)
+            .collect::<Vec<_>>();
+
+        // Gracefully handle a mismatch of expectations. This should not occur in practice as we
+        // check that all planes have been read (see note on `read_image_to_buffer` usage below).
+        if planes.len() < usize::from(info.color_type.channel_count()) {
+            return Err(ImageError::Decoding(DecodingError::new(
+                ImageFormat::Tiff.into(),
+                "Not enough planes read from TIFF image".to_string(),
+            )));
+        }
+
+        utils::interleave_planes(
+            output,
+            info.color_type,
+            &planes[..usize::from(info.color_type.channel_count())],
+        );
+
+        Ok(())
+    }
+}
+
+impl ImageInfo {
+    // The buffer can be larger for CMYK than the RGB output
+    fn total_bytes_buffer(&self) -> u64 {
+        let (width, height) = self.dimensions;
+        let total_pixels = u64::from(width) * u64::from(height);
+
+        let bytes_per_pixel = match self.original_color_type {
+            ExtendedColorType::Cmyk8 => 4,
+            ExtendedColorType::Cmyk16 => 8,
+            _ => u64::from(self.color_type.bytes_per_pixel()),
+        };
+
+        total_pixels.saturating_mul(bytes_per_pixel)
+    }
+}
+
+fn check_ycbcr_subsampling<R: BufRead + Seek>(decoder: &mut Decoder<R>) -> ImageResult<()> {
+    let compression = decoder
+        .find_tag(Tag::Compression)
+        .map_err(ImageError::from_tiff_decode)?
+        .and_then(|v| v.into_u16().ok());
+
+    const COMPRESSION_MODERN_JPEG: u16 = 7;
+    if compression == Some(COMPRESSION_MODERN_JPEG) {
+        return Ok(());
+    }
+
+    let subsampling = decoder
+        .find_tag(TAG_YCBCR_SUBSAMPLING)
+        .map_err(ImageError::from_tiff_decode)?
+        .map(|value| value.into_u16_vec())
+        .transpose()
+        .map_err(ImageError::from_tiff_decode)?;
+
+    let subsampling = subsampling.as_deref().unwrap_or(&[2, 2]);
+
+    if subsampling != [1, 1] {
+        return Err(ImageError::Unsupported(
+            UnsupportedError::from_format_and_kind(
+                ImageFormat::Tiff.into(),
+                UnsupportedErrorKind::GenericFeature(format!(
+                "Subsampling {:?} is not supported. Only (1,1) is supported for non-JPEG YCbCr.",
+                subsampling
+            )),
+            ),
+        ));
+    }
+
+    Ok(())
+}
+
+fn read_ycbcr_coefficients<R: BufRead + Seek>(decoder: &mut Decoder<R>) -> ImageResult<[f32; 3]> {
+    let value = decoder
+        .find_tag(TAG_YCBCR_COEFFICIENTS)
+        .map_err(ImageError::from_tiff_decode)?;
+
+    const DEFAULT_YCBCR_COEFFICIENTS: [f32; 3] = [0.299, 0.587, 0.114];
+    let Some(value) = value else {
+        return Ok(DEFAULT_YCBCR_COEFFICIENTS);
+    };
+
+    let list = match value {
+        Value::List(list) if list.len() == 3 => list,
+        _ => {
+            return Err(ImageError::Decoding(DecodingError::new(
+                ImageFormat::Tiff.into(),
+                "YCbCrCoefficients tag (529) must contain exactly 3 rational values".to_string(),
+            )));
+        }
+    };
+
+    let mut coefficients = [0.0f32; 3];
+    for (i, value) in list.iter().enumerate() {
+        match value {
+            Value::Rational(num, denom) if *denom != 0 => {
+                coefficients[i] = *num as f32 / *denom as f32
+            }
+            _ => {
+                return Err(ImageError::Decoding(DecodingError::new(
+                    ImageFormat::Tiff.into(),
+                    "YCbCrCoefficients tag (529) contains an invalid rational value".to_string(),
+                )));
+            }
+        }
+    }
+
+    Ok(coefficients)
+}
+
+impl ImageError {
+    fn from_tiff_decode(err: tiff::TiffError) -> ImageError {
+        match err {
+            tiff::TiffError::IoError(err) => ImageError::IoError(err),
+            err @ (tiff::TiffError::FormatError(_)
+            | tiff::TiffError::IntSizeError
+            | tiff::TiffError::UsageError(_)) => {
+                ImageError::Decoding(DecodingError::new(ImageFormat::Tiff.into(), err))
+            }
+            tiff::TiffError::UnsupportedError(desc) => {
+                ImageError::Unsupported(UnsupportedError::from_format_and_kind(
+                    ImageFormat::Tiff.into(),
+                    UnsupportedErrorKind::GenericFeature(desc.to_string()),
+                ))
+            }
+            tiff::TiffError::LimitsExceeded => {
+                ImageError::Limits(LimitError::from_kind(LimitErrorKind::InsufficientMemory))
+            }
+        }
+    }
+
+    fn from_tiff_encode(err: tiff::TiffError) -> ImageError {
+        match err {
+            tiff::TiffError::IoError(err) => ImageError::IoError(err),
+            err @ (tiff::TiffError::FormatError(_)
+            | tiff::TiffError::IntSizeError
+            | tiff::TiffError::UsageError(_)) => {
+                ImageError::Encoding(EncodingError::new(ImageFormat::Tiff.into(), err))
+            }
+            tiff::TiffError::UnsupportedError(desc) => {
+                ImageError::Unsupported(UnsupportedError::from_format_and_kind(
+                    ImageFormat::Tiff.into(),
+                    UnsupportedErrorKind::GenericFeature(desc.to_string()),
+                ))
+            }
+            tiff::TiffError::LimitsExceeded => {
+                ImageError::Limits(LimitError::from_kind(LimitErrorKind::InsufficientMemory))
+            }
+        }
+    }
+}
+
+impl<R: BufRead + Seek> ImageDecoder for TiffDecoder<R> {
+    fn format_attributes(&self) -> FormatAttributes {
+        FormatAttributes {
+            // is any sort of iTXT chunk.
+            xmp: DecodedMetadataHint::PerImage,
+            icc: DecodedMetadataHint::PerImage,
+            exif: DecodedMetadataHint::PerImage,
+            // not provided above.
+            iptc: DecodedMetadataHint::Unsupported,
+            supports_sequence: true,
+            ..FormatAttributes::default()
+        }
+    }
+
+    fn prepare_image(&mut self) -> ImageResult<DecoderPreparedImage> {
+        let info = self.peek_info()?;
+        let (width, height) = info.dimensions;
+
+        Ok(DecoderPreparedImage::new(width, height, info.color_type))
+    }
+
+    fn icc_profile(&mut self) -> ImageResult<Option<Vec<u8>>> {
+        if let Some(decoder) = &mut self.inner {
+            Ok(decoder.get_tag_u8_vec(Tag::IccProfile).ok())
+        } else {
+            Ok(None)
+        }
+    }
+
+    fn xmp_metadata(&mut self) -> ImageResult<Option<Vec<u8>>> {
+        let Some(decoder) = &mut self.inner else {
+            return Ok(None);
+        };
+
+        let value = match decoder.get_tag(TAG_XML_PACKET) {
+            Ok(value) => value,
+            Err(tiff::TiffError::FormatError(tiff::TiffFormatError::RequiredTagNotFound(_))) => {
+                return Ok(None);
+            }
+            Err(err) => return Err(ImageError::from_tiff_decode(err)),
+        };
+        value
+            .into_u8_vec()
+            .map(Some)
+            .map_err(ImageError::from_tiff_decode)
+    }
+
+    fn set_limits(&mut self, limits: crate::Limits) -> ImageResult<()> {
+        limits.check_support(&crate::LimitSupport::default())?;
+
+        let reserved = match self.info {
+            ImageState::At(info) => info,
+            // Construct a dummy info that did not consume any memory.
+            _ => ImageInfo {
+                dimensions: (0, 0),
+                color_type: ColorType::L8,
+                original_color_type: ExtendedColorType::L8,
+                ycbcr_coefficients: [0.0; 3],
+            },
+        };
+
+        let (width, height) = reserved.dimensions;
+        limits.check_dimensions(width, height)?;
+
+        let max_alloc = limits
+            .max_alloc
+            .and_then(|n| usize::try_from(n).ok())
+            .unwrap_or(usize::MAX);
+
+        self.limits.decoding_buffer_size = max_alloc;
+        self.limits.intermediate_buffer_size = 0;
+        self.redistribute_limits();
+
+        Ok(())
+    }
+
+    fn read_image(&mut self, buf: &mut [u8]) -> ImageResult<DecodedImageAttributes> {
+        let info = self.peek_info()?;
+        let layout = self.prepare_image()?;
+
+        let original_color_type = Some(info.original_color_type);
+        assert_eq!(u64::try_from(buf.len()), Ok(layout.total_bytes()));
+
+        let Some(reader) = &mut self.inner else {
+            return Err(ImageError::Parameter(ParameterError::from_kind(
+                ParameterErrorKind::FailedAlready,
+            )));
+        };
+
+        let layout = reader
+            .read_image_to_buffer(&mut self.buffer)
+            .map_err(ImageError::from_tiff_decode)?;
+
+        // Check if we have all of the planes. Otherwise we ran into the allocation limit.
+        if self.buffer.as_buffer(0).as_bytes().len() < layout.complete_len {
+            return Err(ImageError::Limits(LimitError::from_kind(
+                LimitErrorKind::InsufficientMemory,
+            )));
+        }
+
+        if layout.planes > 1 {
+            // Note that we do not support planar layouts if we have to do conversion. Yet. See a
+            // more detailed comment in the implementation.
+            self.interleave_planes(info, layout, buf)?;
+            return Ok(DecodedImageAttributes::default());
+        }
+
+        match &self.buffer {
+            DecodingResult::U8(v) if info.original_color_type == ExtendedColorType::Cmyk8 => {
+                let buf = buf.as_chunks_mut::<3>().0;
+                for (cmyk, rgb) in v.as_chunks::<4>().0.iter().zip(buf) {
+                    *rgb = cmyk_to_rgb(cmyk);
+                }
+            }
+            DecodingResult::U16(v) if info.original_color_type == ExtendedColorType::Cmyk16 => {
+                let buf = buf.as_chunks_mut::<6>().0;
+                for (cmyk, rgb) in v.as_chunks::<4>().0.iter().zip(buf) {
+                    *rgb = bytemuck::cast(cmyk_to_rgb16(cmyk));
+                }
+            }
+            DecodingResult::U8(v) if info.original_color_type == ExtendedColorType::L1 => {
+                let width = info.dimensions.0;
+                let row_bytes = width.div_ceil(8);
+
+                for (in_row, out_row) in v
+                    .chunks_exact(row_bytes as usize)
+                    .zip(buf.chunks_exact_mut(width as usize))
+                {
+                    out_row.copy_from_slice(&utils::expand_bits(1, width, in_row));
+                }
+            }
+            DecodingResult::U8(v) if info.original_color_type == ExtendedColorType::YCbCr8 => {
+                let [lr, lg, lb] = info.ycbcr_coefficients;
+                let ycbcr = v.as_chunks::<3>().0;
+                let out = buf.as_chunks_mut::<3>().0;
+
+                ycbcr_to_rgb8(ycbcr, lr, lg, lb, out);
+            }
+            DecodingResult::U8(v) => {
+                buf.copy_from_slice(v);
+            }
+            DecodingResult::U16(v) => {
+                buf.copy_from_slice(bytemuck::cast_slice(v));
+            }
+            DecodingResult::U32(v) => {
+                buf.copy_from_slice(bytemuck::cast_slice(v));
+            }
+            DecodingResult::U64(v) => {
+                buf.copy_from_slice(bytemuck::cast_slice(v));
+            }
+            DecodingResult::I8(v) => {
+                buf.copy_from_slice(bytemuck::cast_slice(v));
+            }
+            DecodingResult::I16(v) => {
+                buf.copy_from_slice(bytemuck::cast_slice(v));
+            }
+            DecodingResult::I32(v) => {
+                buf.copy_from_slice(bytemuck::cast_slice(v));
+            }
+            DecodingResult::I64(v) => {
+                buf.copy_from_slice(bytemuck::cast_slice(v));
+            }
+            DecodingResult::F32(v) => {
+                buf.copy_from_slice(bytemuck::cast_slice(v));
+            }
+            DecodingResult::F64(v) => {
+                buf.copy_from_slice(bytemuck::cast_slice(v));
+            }
+            DecodingResult::F16(_) => unreachable!(),
+        }
+
+        let orientation = reader
+            .find_tag(Tag::Orientation)
+            .map_err(ImageError::from_tiff_decode)?
+            .and_then(|v| Orientation::from_exif(v.into_u16().ok()?.min(255) as u8));
+
+        // Indicate to advance.
+        self.info = ImageState::Consumed;
+
+        Ok(DecodedImageAttributes {
+            orientation,
+            original_color_type,
+            ..DecodedImageAttributes::default()
+        })
+    }
+
+    fn exif_metadata(&mut self) -> ImageResult<Option<Vec<u8>>> {
+        Ok(None)
+    }
+
+    fn iptc_metadata(&mut self) -> ImageResult<Option<Vec<u8>>> {
+        Ok(None)
+    }
+
+    fn more_images(&self) -> crate::io::SequenceControl {
+        self.inner
+            .as_ref()
+            .and_then(|reader| {
+                reader
+                    .more_images()
+                    .then_some(crate::io::SequenceControl::MaybeMore)
+            })
+            .unwrap_or(crate::io::SequenceControl::None)
+    }
+}
+
+/// Encoder for tiff images
+pub struct TiffEncoder<W> {
+    w: W,
+    icc: Option<Vec<u8>>,
+    xmp: Option<Vec<u8>>,
+}
+
+fn ycbcr_to_rgb8(ycbcr: &[[u8; 3]], lr: f32, lg: f32, lb: f32, out: &mut [[u8; 3]]) {
+    let coeff_r = 2.0 * (1.0 - lr);
+    let coeff_b = 2.0 * (1.0 - lb);
+    let inv_lg = 1.0 / lg;
+
+    for (src, dst) in ycbcr.iter().zip(out.iter_mut()) {
+        let y = f32::from(src[0]);
+        let cb = f32::from(src[1]) - 128.0;
+        let cr = f32::from(src[2]) - 128.0;
+
+        let r = y + cr * coeff_r;
+        let b = y + cb * coeff_b;
+        let g = (y - lr * r - lb * b) * inv_lg;
+
+        dst[0] = (r + 0.5) as u8;
+        dst[1] = (g + 0.5) as u8;
+        dst[2] = (b + 0.5) as u8;
+    }
+}
+
+fn cmyk_to_rgb(cmyk: &[u8; 4]) -> [u8; 3] {
+    let c = cmyk[0] as u32;
+    let m = cmyk[1] as u32;
+    let y = cmyk[2] as u32;
+    let k = cmyk[3] as u32;
+
+    let k_inv = 255 - k;
+    [
+        (((255 - c) * k_inv) / 255) as u8,
+        (((255 - m) * k_inv) / 255) as u8,
+        (((255 - y) * k_inv) / 255) as u8,
+    ]
+}
+
+fn cmyk_to_rgb16(cmyk: &[u16; 4]) -> [u16; 3] {
+    let c = cmyk[0] as u64;
+    let m = cmyk[1] as u64;
+    let y = cmyk[2] as u64;
+    let k = cmyk[3] as u64;
+
+    let k_inv = 65535 - k;
+    [
+        (((65535 - c) * k_inv) / 65535) as u16,
+        (((65535 - m) * k_inv) / 65535) as u16,
+        (((65535 - y) * k_inv) / 65535) as u16,
+    ]
+}
+
+/// Convert a slice of sample bytes to its semantic type, being a `Pod`.
+fn u8_slice_as_pod<P: bytemuck::Pod>(buf: &[u8]) -> ImageResult<std::borrow::Cow<'_, [P]>> {
+    bytemuck::try_cast_slice(buf)
+        .map(std::borrow::Cow::Borrowed)
+        .or_else(|err| {
+            match err {
+                bytemuck::PodCastError::TargetAlignmentGreaterAndInputNotAligned => {
+                    // If the buffer is not aligned for a native slice, copy the buffer into a Vec,
+                    // aligning it in the process. This is only done if the element count can be
+                    // represented exactly.
+                    let vec = bytemuck::allocation::pod_collect_to_vec(buf);
+                    Ok(std::borrow::Cow::Owned(vec))
+                }
+                /* only expecting: bytemuck::PodCastError::OutputSliceWouldHaveSlop */
+                _ => {
+                    // `bytemuck::PodCastError` of bytemuck-1.2.0 does not implement `Error` and
+                    // `Display` trait.
+                    // See <https://github.com/Lokathor/bytemuck/issues/22>.
+                    Err(ImageError::Parameter(ParameterError::from_kind(
+                        ParameterErrorKind::Generic(format!(
+                            "Casting samples to their representation failed: {err:?}",
+                        )),
+                    )))
+                }
+            }
+        })
+}
+
+impl<W: Write + Seek> TiffEncoder<W> {
+    /// Create a new encoder that writes its output to `w`
+    pub fn new(w: W) -> TiffEncoder<W> {
+        TiffEncoder {
+            w,
+            icc: None,
+            xmp: None,
+        }
+    }
+
+    /// Private wrapper function to encode the image with a generic color type. This is used to reduce code duplication in the public `write_image` function.
+    fn write_tiff<C: tiff::encoder::colortype::ColorType<Inner: bytemuck::Pod>>(
+        self,
+        width: u32,
+        height: u32,
+        data: &[u8],
+    ) -> ImageResult<()>
+    where
+        [C::Inner]: tiff::encoder::TiffValue,
+    {
+        let mut encoder =
+            tiff::encoder::TiffEncoder::new(self.w).map_err(ImageError::from_tiff_encode)?;
+        let data = u8_slice_as_pod::<C::Inner>(data)?;
+        let mut img_encoder = encoder
+            .new_image::<C>(width, height)
+            .map_err(ImageError::from_tiff_encode)?;
+        if self.icc.is_some() || self.xmp.is_some() {
+            let ifd_encoder = img_encoder.encoder();
+            if let Some(icc_profile) = self.icc {
+                ifd_encoder
+                    .write_tag(Tag::IccProfile, icc_profile.as_slice())
+                    .map_err(ImageError::from_tiff_encode)?;
+            }
+            if let Some(xmp) = self.xmp {
+                ifd_encoder
+                    .write_tag(TAG_XML_PACKET, xmp.as_slice())
+                    .map_err(ImageError::from_tiff_encode)?;
+            }
+        }
+        img_encoder
+            .write_data(&data)
+            .map_err(ImageError::from_tiff_encode)
+    }
+}
+
+impl<W: Write + Seek> ImageEncoder for TiffEncoder<W> {
+    /// Encodes the image `image` that has dimensions `width` and `height` and `ColorType` `c`.
+    ///
+    /// 16-bit types assume the buffer is native endian.
+    ///
+    /// # Panics
+    ///
+    /// Panics if the buffer does not hold exactly the number of bytes required for the given
+    /// `width`, `height`, and `color_type`, accounting for rows padded to whole bytes for
+    /// sub-byte color types: `height * ((width * color_type.bits_per_pixel() as u32 + 7) / 8)`.
+    #[track_caller]
+    fn write_image(
+        self,
+        buf: &[u8],
+        width: u32,
+        height: u32,
+        color_type: ExtendedColorType,
+    ) -> ImageResult<()> {
+        use tiff::encoder::colortype::{
+            Gray16, Gray32Float, Gray8, RGB32Float, RGBA32Float, RGB16, RGB8, RGBA16, RGBA8,
+        };
+        let expected_buffer_len = color_type.buffer_size(width, height);
+        assert_eq!(
+            expected_buffer_len,
+            buf.len() as u64,
+            "Invalid buffer length: expected {expected_buffer_len} got {} for {width}x{height} image",
+            buf.len(),
+        );
+        match color_type {
+            ExtendedColorType::L8 => self.write_tiff::<Gray8>(width, height, buf),
+            ExtendedColorType::Rgb8 => self.write_tiff::<RGB8>(width, height, buf),
+            ExtendedColorType::Rgba8 => self.write_tiff::<RGBA8>(width, height, buf),
+            ExtendedColorType::L16 => self.write_tiff::<Gray16>(width, height, buf),
+            ExtendedColorType::Rgb16 => self.write_tiff::<RGB16>(width, height, buf),
+            ExtendedColorType::Rgba16 => self.write_tiff::<RGBA16>(width, height, buf),
+            ExtendedColorType::L32F => self.write_tiff::<Gray32Float>(width, height, buf),
+            ExtendedColorType::Rgb32F => self.write_tiff::<RGB32Float>(width, height, buf),
+            ExtendedColorType::Rgba32F => self.write_tiff::<RGBA32Float>(width, height, buf),
+            _ => Err(ImageError::Unsupported(
+                UnsupportedError::from_format_and_kind(
+                    ImageFormat::Tiff.into(),
+                    UnsupportedErrorKind::Color(color_type),
+                ),
+            )),
+        }
+    }
+
+    fn set_icc_profile(&mut self, icc_profile: Vec<u8>) -> Result<(), UnsupportedError> {
+        self.icc = Some(icc_profile);
+        Ok(())
+    }
+
+    fn set_xmp_metadata(&mut self, xmp: Vec<u8>) -> Result<(), UnsupportedError> {
+        self.xmp = Some(xmp);
+        Ok(())
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use std::io::Cursor;
+
+    use crate::{
+        EncodableLayout, ExtendedColorType, GenericImageView, ImageBuffer, ImageDecoder as _,
+        ImageEncoder, ImageReader, Luma, Pixel, PixelWithColorType, Rgb, Rgba,
+    };
+
+    use super::{TiffDecoder, TiffEncoder};
+
+    #[test]
+    fn roundtrip_xmp() {
+        let img = [255u8, 0, 0, 0, 255, 0, 0, 0, 255];
+        let xmp = b"<x:xmpmeta xmlns:x=\"adobe:ns:meta/\"><rdf:RDF></rdf:RDF></x:xmpmeta>".to_vec();
+
+        let mut encoded = Vec::new();
+        {
+            let mut encoder = TiffEncoder::new(Cursor::new(&mut encoded));
+            encoder.set_xmp_metadata(xmp.clone()).unwrap();
+            encoder
+                .write_image(&img, 3, 1, ExtendedColorType::Rgb8)
+                .expect("Could not encode image");
+        }
+
+        let mut decoder = TiffDecoder::new(Cursor::new(&encoded)).expect("Could not decode image");
+        let decoded_xmp = decoder
+            .xmp_metadata()
+            .expect("Error decoding XMP")
+            .expect("XMP is empty");
+        assert_eq!(xmp, decoded_xmp);
+    }
+
+    #[test]
+    fn roundtrip_color_types() {
+        let img_l8 = ImageBuffer::from_fn(32, 32, |x, y| Luma([(x + y) as u8]));
+        let img_rgb8 = ImageBuffer::from_fn(32, 32, |x, y| Rgb([x as u8, y as u8, (x + y) as u8]));
+        let img_rgba8 = ImageBuffer::from_fn(32, 32, |x, y| {
+            Rgba([x as u8, y as u8, (x + y) as u8, (x * y) as u8])
+        });
+
+        assert_roundtrip::<Luma<u8>>(&img_l8);
+        assert_roundtrip::<Rgb<u8>>(&img_rgb8);
+        assert_roundtrip::<Rgba<u8>>(&img_rgba8);
+
+        assert_roundtrip::<Luma<u16>>(&img_l8.convert());
+        assert_roundtrip::<Rgb<u16>>(&img_rgb8.convert());
+        assert_roundtrip::<Rgba<u16>>(&img_rgba8.convert());
+
+        assert_roundtrip::<Luma<f32>>(&img_l8.convert());
+        assert_roundtrip::<Rgb<f32>>(&img_rgb8.convert());
+        assert_roundtrip::<Rgba<f32>>(&img_rgba8.convert());
+
+        fn assert_roundtrip<P: Pixel + PixelWithColorType>(img: &ImageBuffer<P, Vec<P::Subpixel>>)
+        where
+            [P::Subpixel]: EncodableLayout,
+            Rgba<u8>: crate::color::FromColor<P>,
+        {
+            let mut encoded = Vec::new();
+            let encoder = TiffEncoder::new(Cursor::new(&mut encoded));
+            ImageBuffer::write_with_encoder(img, encoder).expect("Could not encoder image");
+
+            let mut reader = ImageReader::new(Cursor::new(encoded)).unwrap();
+            let (decoded, meta) = reader.decode().expect("Could not decode image");
+
+            assert_eq!(img.dimensions(), decoded.dimensions());
+            assert_eq!(Some(P::COLOR_TYPE), meta.attributes().original_color_type);
+
+            let img_rgba8 = img.convert::<Rgba<u8>>();
+            let decoded_rgba8 = decoded.to_rgba8();
+
+            assert_eq!(img_rgba8, decoded_rgba8);
+        }
+    }
+}

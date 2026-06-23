@@ -1,0 +1,544 @@
+use crate::error::{ImageError, ImageResult};
+use crate::flat::{ViewMutOfPixel, ViewOfPixel};
+use crate::math::Rect;
+use crate::traits::Pixel;
+use crate::{ImageBuffer, SubImage};
+
+/// Trait to inspect an image.
+///
+/// ```
+/// use image::{GenericImageView, Rgb, RgbImage};
+///
+/// let buffer = RgbImage::new(10, 10);
+/// let image: &dyn GenericImageView<Pixel = Rgb<u8>> = &buffer;
+/// ```
+pub trait GenericImageView {
+    /// The type of pixel.
+    type Pixel: Pixel;
+
+    /// The width and height of this image.
+    fn dimensions(&self) -> (u32, u32);
+
+    /// The width of this image.
+    fn width(&self) -> u32 {
+        let (w, _) = self.dimensions();
+        w
+    }
+
+    /// The height of this image.
+    fn height(&self) -> u32 {
+        let (_, h) = self.dimensions();
+        h
+    }
+
+    /// Returns true if this x, y coordinate is contained inside the image.
+    fn in_bounds(&self, x: u32, y: u32) -> bool {
+        let (width, height) = self.dimensions();
+        x < width && y < height
+    }
+
+    /// Returns the pixel located at (x, y). Indexed from top left.
+    ///
+    /// # Panics
+    ///
+    /// Panics if `(x, y)` is out of bounds.
+    fn get_pixel(&self, x: u32, y: u32) -> Self::Pixel;
+
+    /// Returns the pixel located at (x, y). Indexed from top left.
+    ///
+    /// This function can be implemented in a way that ignores bounds checking.
+    /// # Safety
+    ///
+    /// The coordinates must be [`in_bounds`] of the image.
+    ///
+    /// [`in_bounds`]: Self::in_bounds
+    unsafe fn unsafe_get_pixel(&self, x: u32, y: u32) -> Self::Pixel {
+        self.get_pixel(x, y)
+    }
+
+    /// Returns an Iterator over the pixels of this image.
+    /// The iterator yields the coordinates of each pixel
+    /// along with their value
+    fn pixels(&self) -> Pixels<'_, Self>
+    where
+        Self: Sized,
+    {
+        let (width, height) = self.dimensions();
+
+        Pixels {
+            image: self,
+            x: 0,
+            y: 0,
+            width,
+            height,
+        }
+    }
+
+    /// Returns a subimage that is an immutable view into this image.
+    /// You can use [`GenericImage::sub_image`] if you need a mutable view instead.
+    /// The coordinates set the position of the top left corner of the view.
+    ///
+    ///  # Panics
+    ///
+    /// Panics if the dimensions provided fall out of bounds.
+    fn view(&self, rect: Rect) -> SubImage<&Self>
+    where
+        Self: Sized,
+    {
+        rect.assert_in_bounds_of(self);
+        SubImage::new(self, rect)
+    }
+
+    /// Returns a subimage that is an immutable view into this image so long as
+    /// the provided coordinates and dimensions are within the bounds of this Image.
+    fn try_view(&self, rect: Rect) -> Result<SubImage<&Self>, ImageError>
+    where
+        Self: Sized,
+    {
+        rect.test_in_bounds_of(self)?;
+        Ok(SubImage::new(self, rect))
+    }
+
+    /// Create an empty [`ImageBuffer`] with the same pixel type as this image.
+    ///
+    /// This should ensure metadata such as the color space are transferred without copying any of
+    /// the pixel data. The idea is to prepare a buffer ready to be filled with a filtered or
+    /// portion of the channel data from the current image without performing the work of copying
+    /// the data into that buffer twice.
+    ///
+    /// The default implementation defers to [`GenericImageView::buffer_like`].
+    fn buffer_like(&self) -> ImageBuffer<Self::Pixel, Vec<<Self::Pixel as Pixel>::Subpixel>> {
+        let (w, h) = self.dimensions();
+        self.buffer_with_dimensions(w, h)
+    }
+
+    /// Create an empty [`ImageBuffer`] with different dimensions.
+    ///
+    /// See [`GenericImageView::buffer_like`].
+    ///
+    /// Uses for this are for instances preparing a buffer for only a portion of the image, or
+    /// extracting the metadata to prepare a buffer of a different pixel type.
+    fn buffer_with_dimensions(
+        &self,
+        width: u32,
+        height: u32,
+    ) -> ImageBuffer<Self::Pixel, Vec<<Self::Pixel as Pixel>::Subpixel>> {
+        ImageBuffer::new(width, height)
+    }
+
+    /// If the buffer has a fitting layout, return a canonical view of the samples.
+    ///
+    /// This is the basis of optimization and by default return `None`. It lets consumers of
+    /// generic images access the sample data through a canonical descriptor of its layout directly
+    /// instead of pixel-by-pixel. This provides more efficient forms of access that the
+    /// [`GenericImageView`] trait itself does not demand from all its implementations.
+    ///
+    /// Implementation of this method should be cheap to call.
+    ///
+    /// See [`GenericImage::to_pixel_view_mut`] for images that allow mutating pixels.
+    ///
+    /// If implemented, a [`SubImage`] proxy of this image will provide a sample view as well.
+    fn to_pixel_view(&self) -> Option<ViewOfPixel<'_, Self::Pixel>> {
+        None
+    }
+}
+
+/// Immutable pixel iterator
+#[derive(Debug)]
+pub struct Pixels<'a, I: ?Sized + 'a> {
+    image: &'a I,
+    x: u32,
+    y: u32,
+    width: u32,
+    height: u32,
+}
+
+impl<I: GenericImageView> Iterator for Pixels<'_, I> {
+    type Item = (u32, u32, I::Pixel);
+
+    fn next(&mut self) -> Option<(u32, u32, I::Pixel)> {
+        if self.x >= self.width {
+            self.x = 0;
+            self.y += 1;
+        }
+
+        if self.y >= self.height {
+            None
+        } else {
+            let pixel = self.image.get_pixel(self.x, self.y);
+            let p = (self.x, self.y, pixel);
+
+            self.x += 1;
+
+            Some(p)
+        }
+    }
+}
+
+impl<I: ?Sized> Clone for Pixels<'_, I> {
+    fn clone(&self) -> Self {
+        Pixels { ..*self }
+    }
+}
+
+/// A trait for manipulating images.
+pub trait GenericImage: GenericImageView {
+    /// Put a pixel at location (x, y). Indexed from top left.
+    ///
+    /// # Panics
+    ///
+    /// Panics if `(x, y)` is out of bounds.
+    fn put_pixel(&mut self, x: u32, y: u32, pixel: Self::Pixel);
+
+    /// Puts a pixel at location (x, y). Indexed from top left.
+    ///
+    /// This function can be implemented in a way that ignores bounds checking.
+    /// # Safety
+    ///
+    /// The coordinates must be [`in_bounds`] of the image.
+    ///
+    /// [`in_bounds`]: GenericImageView::in_bounds
+    unsafe fn unsafe_put_pixel(&mut self, x: u32, y: u32, pixel: Self::Pixel) {
+        self.put_pixel(x, y, pixel);
+    }
+
+    /// Copies all of the pixels from another image into this image.
+    ///
+    /// The other image is copied with the top-left corner of the
+    /// other image placed at (x, y).
+    ///
+    /// In order to copy only a piece of the other image, use [`GenericImageView::view`].
+    ///
+    /// You can use [`FlatSamples`] to source pixels from an arbitrary regular raster of channel
+    /// values, for example from a foreign interface or a fixed image.
+    ///
+    /// # Returns
+    /// Returns an error if the image is too large to be copied at the given position
+    ///
+    /// [`FlatSamples`]: crate::FlatSamples
+    fn copy_from<O>(&mut self, other: &O, x: u32, y: u32) -> ImageResult<()>
+    where
+        O: GenericImageView<Pixel = Self::Pixel>,
+    {
+        // This makes it easy to keep the default implementation without sacrificing performance.
+        // It suffices for impls to override `copy_from_samples` for most of the gains.
+        if let Some(flat) = other.to_pixel_view() {
+            return self.copy_from_samples(flat, x, y);
+        }
+
+        // Note the order: for types that implement an efficient assignment *from* a basic view we
+        // also expect that they know how to iterate themselves efficiently, they can do their own
+        // View-To-View performance or may do eve better than that if their view is more complex for
+        // some reason. Their choice. On the other hand if the source is _not_ a simple view then it
+        // will likely need to go through individual `GenericImageView::get_pixel` calls. And in
+        // this case we can still save on iterator calls for the target. The customization point
+        // however does not exist; any trait impl that intends to make this fast would need to
+        // provide a full `copy_from` impl. We only need to avoid the recursion here: `ViewMut` will
+        // override its `copy_from` with the intended effect by providing a non-trait inherent
+        // method instead.
+        if let Some(mut view) = self.to_pixel_view_mut() {
+            return view.inner_copy_from(other, x, y);
+        }
+
+        // Do bounds checking here so we can use the non-bounds-checking
+        // functions to copy pixels.
+        Rect::from_image_at(other, x, y).test_in_bounds_of(self)?;
+
+        for k in 0..other.height() {
+            for i in 0..other.width() {
+                let p = other.get_pixel(i, k);
+                self.put_pixel(i + x, k + y, p);
+            }
+        }
+
+        Ok(())
+    }
+
+    /// Copy pixels from a regular strided matrix of pixels.
+    fn copy_from_samples(
+        &mut self,
+        samples: ViewOfPixel<'_, Self::Pixel>,
+        x: u32,
+        y: u32,
+    ) -> ImageResult<()> {
+        // Even though the implementation is the same, do not just call `Self::copy_from` here to
+        // avoid circular dependencies in careless implementations.
+        Rect::from_image_at(&samples, x, y).test_in_bounds_of(self)?;
+
+        for k in 0..samples.height() {
+            for i in 0..samples.width() {
+                let p = samples.get_pixel(i, k);
+                self.put_pixel(i + x, k + y, p);
+            }
+        }
+
+        Ok(())
+    }
+
+    /// Copies all of the pixels from one part of this image to another part of this image.
+    ///
+    /// The destination rectangle of the copy is specified with the top-left corner placed at (x, y).
+    ///
+    /// # Returns
+    /// `true` if the copy was successful, `false` if the image could not
+    /// be copied due to size constraints.
+    fn copy_within(&mut self, source: Rect, x: u32, y: u32) -> bool {
+        let Rect {
+            x: sx,
+            y: sy,
+            width,
+            height,
+        } = source;
+        let dx = x;
+        let dy = y;
+        assert!(sx < self.width() && dx < self.width());
+        assert!(sy < self.height() && dy < self.height());
+        if self.width() - dx.max(sx) < width || self.height() - dy.max(sy) < height {
+            return false;
+        }
+        // since `.rev()` creates a new dype we would either have to go with dynamic dispatch for the ranges
+        // or have quite a lot of code bloat. A macro gives us static dispatch with less visible bloat.
+        macro_rules! copy_within_impl_ {
+            ($xiter:expr, $yiter:expr) => {
+                for y in $yiter {
+                    let sy = sy + y;
+                    let dy = dy + y;
+                    for x in $xiter {
+                        let sx = sx + x;
+                        let dx = dx + x;
+                        let pixel = self.get_pixel(sx, sy);
+                        self.put_pixel(dx, dy, pixel);
+                    }
+                }
+            };
+        }
+        // check how target and source rectangles relate to each other so we dont overwrite data before we copied it.
+        match (sx < dx, sy < dy) {
+            (true, true) => copy_within_impl_!((0..width).rev(), (0..height).rev()),
+            (true, false) => copy_within_impl_!((0..width).rev(), 0..height),
+            (false, true) => copy_within_impl_!(0..width, (0..height).rev()),
+            (false, false) => copy_within_impl_!(0..width, 0..height),
+        }
+        true
+    }
+
+    /// Returns a mutable subimage that is a view into this image.
+    /// If you want an immutable subimage instead, use [`GenericImageView::view`]
+    /// The coordinates set the position of the top left corner of the `SubImage`.
+    fn sub_image(&mut self, rect: Rect) -> SubImage<&mut Self>
+    where
+        Self: Sized,
+    {
+        rect.assert_in_bounds_of(self);
+        SubImage::new(self, rect)
+    }
+
+    /// If the buffer has a fitting layout, return a canonical mutable view of the samples.
+    ///
+    /// This is the basis of optimization and by default return `None`. It lets consumers of generic
+    /// images access the sample data through a canonical descriptor of its layout directly instead
+    /// of pixel-by-pixel. This provides more efficient, batched, forms of access that the
+    /// [`GenericImage`] trait itself does not demand from all its implementations.
+    ///
+    /// Implementation of this method should be cheap to call.
+    ///
+    /// See [`GenericImageView::to_pixel_view`].
+    ///
+    /// If implemented, a [`SubImage`] proxy of this image will provide a sample view as well.
+    fn to_pixel_view_mut(&mut self) -> Option<ViewMutOfPixel<'_, Self::Pixel>> {
+        None
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::{GenericImage, GenericImageView};
+
+    use crate::color::Rgba;
+    use crate::math::Rect;
+    use crate::{GrayImage, ImageBuffer};
+
+    #[test]
+    fn test_image_put_pixel() {
+        let mut target = ImageBuffer::new(1, 1);
+        let pixel: Rgba<u8> = Rgba([255, 0, 0, 255]);
+        target.put_pixel(0, 0, pixel);
+        assert_eq!(*target.get_pixel(0, 0), pixel);
+    }
+
+    #[test]
+    fn test_in_bounds() {
+        let mut target = ImageBuffer::new(2, 2);
+        target.put_pixel(0, 0, Rgba([255u8, 0, 0, 255]));
+
+        assert!(target.in_bounds(0, 0));
+        assert!(target.in_bounds(1, 0));
+        assert!(target.in_bounds(0, 1));
+        assert!(target.in_bounds(1, 1));
+
+        assert!(!target.in_bounds(2, 0));
+        assert!(!target.in_bounds(0, 2));
+        assert!(!target.in_bounds(2, 2));
+    }
+
+    #[test]
+    fn test_can_subimage_clone_nonmut() {
+        let mut source = ImageBuffer::new(3, 3);
+        source.put_pixel(1, 1, Rgba([255u8, 0, 0, 255]));
+
+        // A non-mutable copy of the source image
+        let source = source.clone();
+
+        // Clone a view into non-mutable to a separate buffer
+        let cloned = source.view(Rect::from_xy_ranges(1..2, 1..2)).to_image();
+
+        assert!(cloned.get_pixel(0, 0) == source.get_pixel(1, 1));
+    }
+
+    #[test]
+    fn test_can_nest_views() {
+        let mut source = ImageBuffer::from_pixel(3, 3, Rgba([255u8, 0, 0, 255]));
+
+        {
+            let mut sub1 = source.sub_image(Rect::from_xy_ranges(0..2, 0..2));
+            let mut sub2 = sub1.sub_image(Rect::from_xy_ranges(1..2, 1..2));
+            sub2.put_pixel(0, 0, Rgba([0, 0, 0, 0]));
+        }
+
+        assert_eq!(*source.get_pixel(1, 1), Rgba([0, 0, 0, 0]));
+
+        let view1 = source.view(Rect::from_xy_ranges(0..2, 0..2));
+        assert_eq!(*source.get_pixel(1, 1), view1.get_pixel(1, 1));
+
+        let view2 = view1.view(Rect::from_xy_ranges(1..2, 1..2));
+        assert_eq!(*source.get_pixel(1, 1), view2.get_pixel(0, 0));
+    }
+
+    #[test]
+    #[should_panic]
+    fn test_view_out_of_bounds() {
+        let source = ImageBuffer::from_pixel(3, 3, Rgba([255u8, 0, 0, 255]));
+        source.view(Rect::from_xy_ranges(1..4, 1..4));
+    }
+
+    #[test]
+    #[should_panic]
+    fn test_view_coordinates_out_of_bounds() {
+        let source = ImageBuffer::from_pixel(3, 3, Rgba([255u8, 0, 0, 255]));
+        source.view(Rect::from_xy_ranges(3..6, 3..6));
+    }
+
+    #[test]
+    #[should_panic]
+    fn test_view_width_out_of_bounds() {
+        let source = ImageBuffer::from_pixel(3, 3, Rgba([255u8, 0, 0, 255]));
+        source.view(Rect::from_xy_ranges(1..4, 1..3));
+    }
+
+    #[test]
+    #[should_panic]
+    fn test_view_height_out_of_bounds() {
+        let source = ImageBuffer::from_pixel(3, 3, Rgba([255u8, 0, 0, 255]));
+        source.view(Rect::from_xy_ranges(1..3, 1..4));
+    }
+
+    #[test]
+    #[should_panic]
+    fn test_view_x_out_of_bounds() {
+        let source = ImageBuffer::from_pixel(3, 3, Rgba([255u8, 0, 0, 255]));
+        source.view(Rect::from_xy_ranges(3..6, 1..3));
+    }
+
+    #[test]
+    #[should_panic]
+    fn test_view_y_out_of_bounds() {
+        let source = ImageBuffer::from_pixel(3, 3, Rgba([255u8, 0, 0, 255]));
+        source.view(Rect::from_xy_ranges(1..3, 3..6));
+    }
+
+    #[test]
+    fn test_view_in_bounds() {
+        let source = ImageBuffer::from_pixel(3, 3, Rgba([255u8, 0, 0, 255]));
+        source.view(Rect::from_xy_ranges(0..3, 0..3));
+        source.view(Rect::from_xy_ranges(1..3, 1..3));
+        source.view(Rect::from_xy_ranges(2..2, 2..2));
+    }
+
+    #[test]
+    fn test_copy_sub_image() {
+        let source = ImageBuffer::from_pixel(3, 3, Rgba([255u8, 0, 0, 255]));
+        let view = source.view(Rect::from_xy_ranges(0..3, 0..3));
+        let _view2 = view;
+        view.to_image();
+    }
+
+    #[test]
+    fn test_generic_image_copy_within_oob() {
+        let mut image: GrayImage = ImageBuffer::from_raw(4, 4, vec![0u8; 16]).unwrap();
+        assert!(!image
+            .sub_image(Rect::from_xy_ranges(0..4, 0..4))
+            .copy_within(Rect::from_xy_ranges(0..5, 0..4), 0, 0));
+        assert!(!image
+            .sub_image(Rect::from_xy_ranges(0..4, 0..4))
+            .copy_within(Rect::from_xy_ranges(0..4, 0..5), 0, 0));
+        assert!(!image
+            .sub_image(Rect::from_xy_ranges(0..4, 0..4))
+            .copy_within(Rect::from_xy_ranges(1..5, 0..4), 0, 0));
+        assert!(!image
+            .sub_image(Rect::from_xy_ranges(0..4, 0..4))
+            .copy_within(Rect::from_xy_ranges(0..4, 0..4), 1, 0));
+        assert!(!image
+            .sub_image(Rect::from_xy_ranges(0..4, 0..4))
+            .copy_within(Rect::from_xy_ranges(0..4, 1..5), 0, 0));
+        assert!(!image
+            .sub_image(Rect::from_xy_ranges(0..4, 0..4))
+            .copy_within(Rect::from_xy_ranges(0..4, 0..4), 0, 1));
+        assert!(!image
+            .sub_image(Rect::from_xy_ranges(0..4, 0..4))
+            .copy_within(Rect::from_xy_ranges(1..5, 0..4), 0, 0));
+    }
+
+    #[test]
+    fn test_generic_image_copy_within_tl() {
+        let data = &[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
+        let expected = [0, 1, 2, 3, 4, 0, 1, 2, 8, 4, 5, 6, 12, 8, 9, 10];
+        let mut image: GrayImage = ImageBuffer::from_raw(4, 4, Vec::from(&data[..])).unwrap();
+        assert!(image
+            .sub_image(Rect::from_xy_ranges(0..4, 0..4))
+            .copy_within(Rect::from_xy_ranges(0..3, 0..3), 1, 1));
+        assert_eq!(&image.into_raw(), &expected);
+    }
+
+    #[test]
+    fn test_generic_image_copy_within_tr() {
+        let data = &[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
+        let expected = [0, 1, 2, 3, 1, 2, 3, 7, 5, 6, 7, 11, 9, 10, 11, 15];
+        let mut image: GrayImage = ImageBuffer::from_raw(4, 4, Vec::from(&data[..])).unwrap();
+        assert!(image
+            .sub_image(Rect::from_xy_ranges(0..4, 0..4))
+            .copy_within(Rect::from_xy_ranges(1..4, 0..3), 0, 1));
+        assert_eq!(&image.into_raw(), &expected);
+    }
+
+    #[test]
+    fn test_generic_image_copy_within_bl() {
+        let data = &[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
+        let expected = [0, 4, 5, 6, 4, 8, 9, 10, 8, 12, 13, 14, 12, 13, 14, 15];
+        let mut image: GrayImage = ImageBuffer::from_raw(4, 4, Vec::from(&data[..])).unwrap();
+        assert!(image
+            .sub_image(Rect::from_xy_ranges(0..4, 0..4))
+            .copy_within(Rect::from_xy_ranges(0..3, 1..4), 1, 0));
+        assert_eq!(&image.into_raw(), &expected);
+    }
+
+    #[test]
+    fn test_generic_image_copy_within_br() {
+        let data = &[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
+        let expected = [5, 6, 7, 3, 9, 10, 11, 7, 13, 14, 15, 11, 12, 13, 14, 15];
+        let mut image: GrayImage = ImageBuffer::from_raw(4, 4, Vec::from(&data[..])).unwrap();
+        assert!(image
+            .sub_image(Rect::from_xy_ranges(0..4, 0..4))
+            .copy_within(Rect::from_xy_ranges(1..4, 1..4), 0, 0));
+        assert_eq!(&image.into_raw(), &expected);
+    }
+}

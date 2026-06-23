@@ -1,0 +1,8 @@
+workload,top_mir_pass,top_mir_share,other_share
+rustls,MatchBranchSimplification,0.069355,0.508579
+tokio,DestinationPropagation,0.065091,0.505229
+eza,DeadStoreElimination-initial,0.078137,0.483059
+regex,Inline,0.077221,0.476835
+bat,Inline,0.270558,0.419789
+hyper,MatchBranchSimplification,0.164147,0.355310
+ripgrep,ForceInline,0.099294,0.331876

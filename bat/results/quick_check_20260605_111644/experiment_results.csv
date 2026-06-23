@@ -1,0 +1,2 @@
+ConfigName,Variant,RunID,LLVM_Pass,MIR_Pass,BinarySize(Bytes),TotalRuntime(s),CompileTime(s),RunRepeats,Warmup,BenchFile,Status
+EXP_000_ALL_OFF,bat,1,None,All,6621032,116.422916,214.357679,5,1,/root/MIR_LLVM/bat/benchmark_data.rs,Success

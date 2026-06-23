@@ -1,0 +1,10 @@
+Criterion,Rank,SourceCSV,ConfigName,RunID,LLVM_Pass,MIR_Pass,BinarySize(Bytes),NsPerIter,MBps,TotalRuntime(s),CompileTime(s),Status
+Fastest TotalRuntime(s),1,d:\MIR_LLVM_NEW\hyper\results\20260531_191832\experiment_results.csv,EXP_DBL_0275,9,ifcvt-simple,DeadStoreElimination-initial,173009376,41370239.20,5069,12.500531,49.47203,Success
+Fastest TotalRuntime(s),2,d:\MIR_LLVM_NEW\hyper\results\20260531_191832\experiment_results.csv,EXP_DBL_0286,2,adv-copy-opt,DeadStoreElimination-initial,173009392,41524225.30,5050,12.553874,49.389768,Success
+Fastest TotalRuntime(s),3,d:\MIR_LLVM_NEW\hyper\results\20260531_191832\experiment_results.csv,EXP_DBL_0285,5,separate-const-offset-from-gep,DeadStoreElimination-initial,173009376,41587310.20,5042,12.554228,49.195929,Success
+Smallest BinarySize(Bytes),1,d:\MIR_LLVM_NEW\hyper\results\20260531_191832\experiment_results.csv,EXP_DBL_0681,1,block-placement,GVN,172946848,44212584.80,4743,13.348926,51.272127,Success
+Smallest BinarySize(Bytes),2,d:\MIR_LLVM_NEW\hyper\results\20260531_191832\experiment_results.csv,EXP_DBL_1511,1,block-placement,UnreachableEnumBranching,172949776,43589442.00,4811,13.255403,48.756781,Success
+Smallest BinarySize(Bytes),3,d:\MIR_LLVM_NEW\hyper\results\20260531_191832\experiment_results.csv,EXP_DBL_1262,1,block-placement,ReferencePropagation,172950088,45158675.50,4643,13.743922,48.532301,Success
+Shortest CompileTime(s),1,d:\MIR_LLVM_NEW\hyper\results\20260531_191832\experiment_results.csv,EXP_001_DISABLE_ALL,1,All,N/A,173182488,42397302.20,4946,12.922791,44.757968,Success
+Shortest CompileTime(s),2,d:\MIR_LLVM_NEW\hyper\results\20260531_191832\experiment_results.csv,EXP_DBL_1341,1,lsr,ScalarReplacementOfAggregates,173005928,42460651.60,4939,12.77781,46.742426,Success
+Shortest CompileTime(s),3,d:\MIR_LLVM_NEW\hyper\results\20260531_191832\experiment_results.csv,EXP_DBL_1424,1,lsr,SingleUseConsts,173006448,43520175.90,4818,13.14171,46.792375,Success

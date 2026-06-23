@@ -1,0 +1,1 @@
+ConfigName,Variant,RunID,LLVM_Pass,MIR_Pass,BinarySize(Bytes),TotalRuntime(s),CompileTime(s),RunRepeats,Warmup,BenchFile,Status

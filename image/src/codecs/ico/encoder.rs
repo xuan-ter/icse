@@ -1,0 +1,238 @@
+use byteorder_lite::{LittleEndian, WriteBytesExt};
+use std::borrow::Cow;
+use std::io::{self, Write};
+
+use crate::codecs::png::PngEncoder;
+use crate::error::{EncodingError, ImageError, ImageResult, ParameterError, ParameterErrorKind};
+use crate::{ExtendedColorType, ImageEncoder, ImageFormat};
+
+// Enum value indicating an ICO image (as opposed to a CUR image):
+const ICO_IMAGE_TYPE: u16 = 1;
+// The length of an ICO file ICONDIR structure, in bytes:
+const ICO_ICONDIR_SIZE: u32 = 6;
+// The length of an ICO file DIRENTRY structure, in bytes:
+const ICO_DIRENTRY_SIZE: u32 = 16;
+
+/// ICO encoder
+pub struct IcoEncoder<W: Write> {
+    w: W,
+}
+
+/// An ICO image entry
+pub struct IcoFrame<'a> {
+    // Pre-encoded PNG or BMP
+    encoded_image: Cow<'a, [u8]>,
+    // Stored as `0 => 256, n => n`
+    width: u8,
+    // Stored as `0 => 256, n => n`
+    height: u8,
+    color_type: ExtendedColorType,
+}
+
+impl<'a> IcoFrame<'a> {
+    /// Construct a new `IcoFrame` using a pre-encoded PNG or BMP
+    ///
+    /// The `width` and `height` must be between 1 and 256 (inclusive).
+    pub fn with_encoded(
+        encoded_image: impl Into<Cow<'a, [u8]>>,
+        width: u32,
+        height: u32,
+        color_type: ExtendedColorType,
+    ) -> ImageResult<Self> {
+        let encoded_image = encoded_image.into();
+
+        if !(1..=256).contains(&width) {
+            return Err(ImageError::Parameter(ParameterError::from_kind(
+                ParameterErrorKind::Generic(format!(
+                    "the image width must be `1..=256`, instead width {width} was provided",
+                )),
+            )));
+        }
+
+        if !(1..=256).contains(&height) {
+            return Err(ImageError::Parameter(ParameterError::from_kind(
+                ParameterErrorKind::Generic(format!(
+                    "the image height must be `1..=256`, instead height {height} was provided",
+                )),
+            )));
+        }
+
+        Ok(Self {
+            encoded_image,
+            width: width as u8,
+            height: height as u8,
+            color_type,
+        })
+    }
+
+    /// Construct a new `IcoFrame` by encoding `buf` as a PNG
+    ///
+    /// The `width` and `height` must be between 1 and 256 (inclusive)
+    pub fn as_png(
+        buf: &[u8],
+        width: u32,
+        height: u32,
+        color_type: ExtendedColorType,
+    ) -> ImageResult<Self> {
+        let mut image_data: Vec<u8> = Vec::new();
+        PngEncoder::new(&mut image_data).write_image(buf, width, height, color_type)?;
+
+        let frame = Self::with_encoded(image_data, width, height, color_type)?;
+        Ok(frame)
+    }
+}
+
+impl<W: Write> IcoEncoder<W> {
+    /// Create a new encoder that writes its output to ```w```.
+    pub fn new(w: W) -> IcoEncoder<W> {
+        IcoEncoder { w }
+    }
+
+    /// Takes some [`IcoFrame`]s and encodes them into an ICO.
+    ///
+    /// `images` is a list of images, usually ordered by dimension, which
+    /// must be between 1 and 65535 (inclusive) in length.
+    pub fn encode_images(mut self, images: &[IcoFrame<'_>]) -> ImageResult<()> {
+        if !(1..=usize::from(u16::MAX)).contains(&images.len()) {
+            return Err(ImageError::Parameter(ParameterError::from_kind(
+                ParameterErrorKind::Generic(format!(
+                    "the number of images must be `1..=u16::MAX`, instead {} images were provided",
+                    images.len(),
+                )),
+            )));
+        }
+
+        write_icondir(&mut self.w, images.len() as u16)?;
+
+        let mut offset = ICO_ICONDIR_SIZE + ICO_DIRENTRY_SIZE * images.len() as u32;
+        for (i, image) in images.iter().enumerate() {
+            let Ok(data_size) = u32::try_from(image.encoded_image.len()) else {
+                return Err(ImageError::Encoding(EncodingError::new(
+                    ImageFormat::Ico.into(),
+                    "the encoded image data must be at most 4 GiB",
+                )));
+            };
+
+            write_direntry(
+                &mut self.w,
+                image.width,
+                image.height,
+                image.color_type,
+                offset,
+                data_size,
+            )?;
+
+            // The offset is always calculated for the next frame. So we want
+            // to skip it on the last frame since there is no next frame.
+            // This has the effect of allowing the last frame's content to go
+            // beyond the 4 GiB in the underlying writer.
+            if i == images.len() - 1 {
+                break;
+            }
+
+            offset = offset.checked_add(data_size).ok_or_else(|| {
+                ImageError::Encoding(EncodingError::new(
+                    ImageFormat::Ico.into(),
+                    "the total size of the ICO file must be at most 4 GiB",
+                ))
+            })?;
+        }
+        for image in images {
+            self.w.write_all(&image.encoded_image)?;
+        }
+        Ok(())
+    }
+}
+
+impl<W: Write> ImageEncoder for IcoEncoder<W> {
+    /// Write an ICO image with the specified width, height, and color type.
+    ///
+    /// For color types with 16-bit per channel or larger, the contents of `buf` should be in
+    /// native endian.
+    ///
+    /// WARNING: In image 0.23.14 and earlier this method erroneously expected buf to be in big endian.
+    #[track_caller]
+    fn write_image(
+        self,
+        buf: &[u8],
+        width: u32,
+        height: u32,
+        color_type: ExtendedColorType,
+    ) -> ImageResult<()> {
+        let expected_buffer_len = color_type.buffer_size(width, height);
+        assert_eq!(
+            expected_buffer_len,
+            buf.len() as u64,
+            "Invalid buffer length: expected {expected_buffer_len} got {} for {width}x{height} image",
+            buf.len(),
+        );
+
+        let image = IcoFrame::as_png(buf, width, height, color_type)?;
+        self.encode_images(&[image])
+    }
+}
+
+fn write_icondir<W: Write>(w: &mut W, num_images: u16) -> io::Result<()> {
+    // Reserved field (must be zero):
+    w.write_u16::<LittleEndian>(0)?;
+    // Image type (ICO or CUR):
+    w.write_u16::<LittleEndian>(ICO_IMAGE_TYPE)?;
+    // Number of images in the file:
+    w.write_u16::<LittleEndian>(num_images)?;
+    Ok(())
+}
+
+fn write_direntry<W: Write>(
+    w: &mut W,
+    width: u8,
+    height: u8,
+    color: ExtendedColorType,
+    data_start: u32,
+    data_size: u32,
+) -> io::Result<()> {
+    // Image dimensions:
+    w.write_u8(width)?;
+    w.write_u8(height)?;
+    // Number of colors in palette (or zero for no palette):
+    w.write_u8(0)?;
+    // Reserved field (must be zero):
+    w.write_u8(0)?;
+    // Color planes: 1 is correct, 0 is merely accepted in most circumstances.
+    w.write_u16::<LittleEndian>(1)?;
+    // Bits per pixel:
+    w.write_u16::<LittleEndian>(color.bits_per_pixel())?;
+    // Image data size, in bytes:
+    w.write_u32::<LittleEndian>(data_size)?;
+    // Image data offset, in bytes:
+    w.write_u32::<LittleEndian>(data_start)?;
+    Ok(())
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    // Test that the encoder allows image where all frames have offsets < 4GiB
+    // (even if the total file size might be larger than 4 GiB), but disallows
+    // image where any frame has an offset >= 4 GiB.
+    #[test]
+    fn ico_larger_than_4_gib() {
+        // Allocate a 1 MiB ""image"" and make 4096 frames with it.
+        // The last frame will peek beyond the 4 GiB mark, since the header also takes a bit of memory.
+        let data = vec![0; 1024 * 1024];
+        let create_frame =
+            || IcoFrame::with_encoded(data.as_slice(), 256, 256, ExtendedColorType::Rgba8).unwrap();
+
+        let mut frames: Vec<IcoFrame> = (0..4096).map(|_| create_frame()).collect();
+
+        let encoder = IcoEncoder::new(io::sink());
+        let res = encoder.encode_images(&frames);
+        assert!(res.is_ok());
+
+        // adding just one more frame will cause the offset of the last frame to go beyond 4 GiB, which should cause an error.
+        frames.push(create_frame());
+        let encoder = IcoEncoder::new(io::sink());
+        let res = encoder.encode_images(&frames);
+        assert!(res.is_err());
+    }
+}

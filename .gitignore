@@ -1,0 +1,30 @@
+.venv/
+**/.git_embedded_backup/
+**/__pycache__/
+**/.pytest_cache/
+**/.ipynb_checkpoints/
+
+# Build outputs
+**/target/
+**/build/
+**/dist/
+**/.cache/
+
+# Logs and local databases
+**/*.log
+**/*.db
+**/*.db-*
+**/*.sqlite
+**/*.sqlite3
+
+# Large local benchmark inputs
+ripgrep/benchmark_data.txt
+regex/benchmark_data.txt
+
+# Keep only CSV artifacts from every results directory
+**/results/**
+!**/results/
+!**/results/**/
+!**/results/**/*.csv
+**/results/**/.ipynb_checkpoints/
+**/results/**/.ipynb_checkpoints/**

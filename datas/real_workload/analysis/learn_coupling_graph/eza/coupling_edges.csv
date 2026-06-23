@@ -1,0 +1,8 @@
+Source,Target,Type,Weight,Stability,SelectedBy
+ScalarReplacementOfAggregates,post-ra,Interaction,-0.0032658737993621558,0.22,topk
+ScalarReplacementOfAggregates,spill-fusing,Interaction,-0.0021471432053724567,0.18,topk
+ScalarReplacementOfAggregates,strictnode-mutation,Interaction,-0.0007313051920849166,0.14,topk
+UnreachableEnumBranching,preheader-prot,Interaction,0.0002500999167842232,0.02,topk
+UnreachablePropagation,lsr,Interaction,-7.193688486598258e-05,0.02,topk
+SingleUseConsts,mergeicmps,Interaction,-3.6840822890987386e-05,0.02,topk
+JumpThreading,partial-inlining,Interaction,-2.6518245340372668e-05,0.02,topk

@@ -1,0 +1,9 @@
+# Rust items
+target/
+
+# Editor settings
+.vscode
+.idea
+
+# Apple details
+**/.DS_Store
