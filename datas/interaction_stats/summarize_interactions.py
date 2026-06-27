@@ -6,9 +6,20 @@ import pandas as pd
 
 
 ROOT = Path(r"d:\MIR_LLVM_NEW")
-OUTPUT_DIR = ROOT / "analysis_all" / "interaction_stats"
+OUTPUT_DIR = ROOT / "datas" / "interaction_stats"
 OUTPUT_CSV = OUTPUT_DIR / "interaction_summary.csv"
 OUTPUT_CSV_ZH = OUTPUT_DIR / "interaction_summary_zh.csv"
+PREFERRED_RESULT_PATHS = {
+    # This analysis directory is generated from:
+    # d:\MIR_LLVM_NEW\serde\results_expanded\20260620_123353
+    "serde": ROOT / "serde" / "analysis_new" / "did" / "interaction_results.csv",
+    # This analysis directory is generated from:
+    # d:\MIR_LLVM_NEW\fast_image_resize\results
+    "fast_image_resize": ROOT / "fast_image_resize" / "analysis" / "did" / "interaction_results.csv",
+    # This analysis directory is generated from:
+    # d:\MIR_LLVM_NEW\image\results\run_20260622_162101
+    "image": ROOT / "image" / "analysis" / "did" / "interaction_results.csv",
+}
 
 ZH_COLUMNS = {
     "project": "项目",
@@ -69,6 +80,10 @@ def find_latest_results():
         if analysis_dir == current_analysis_dir:
             if path.stat().st_mtime > current.stat().st_mtime:
                 selected[project] = path
+
+    for project, preferred_path in PREFERRED_RESULT_PATHS.items():
+        if preferred_path.exists():
+            selected[project] = preferred_path
 
     return dict(sorted(selected.items()))
 

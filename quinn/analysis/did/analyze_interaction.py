@@ -9,7 +9,7 @@ import seaborn as sns
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 RESULTS_ROOT = os.path.abspath(os.path.join(BASE_DIR, "..", "..", "results"))
 OUTPUT_DIR = BASE_DIR
-BOOTSTRAP_SAMPLES = 2000
+BOOTSTRAP_SAMPLES = 50000
 BOOTSTRAP_SEED = 42
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 

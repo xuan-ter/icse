@@ -20,8 +20,6 @@ def _clean_pass_name(x: object) -> str:
     s = str(x).strip()
     if s == "" or s.lower() in {"none", "baseline", "nan", "n/a", "na"}:
         return "None"
-    if s.lower() == "all":
-        return "All"
     return s
 
 
@@ -35,6 +33,13 @@ def _read_float(r: Dict[str, str], key: str) -> Optional[float]:
         return None
 
 
+def _is_usable_status(x: object) -> bool:
+    s = str(x if x is not None else "").strip().lower()
+    if s == "":
+        return True
+    return s in {"success", "noparsedresults"}
+
+
 def _mean(xs: Sequence[float]) -> float:
     if not xs:
         return float("nan")
@@ -45,14 +50,20 @@ def _load_groups(*, experiment_csv: str, metric_col: str) -> Dict[Tuple[str, str
     groups: Dict[Tuple[str, str], List[float]] = {}
     with open(experiment_csv, newline="", encoding="utf-8") as f:
         for r in csv.DictReader(f):
-            status = str(r.get("Status", "")).strip()
-            if status and status != "Success":
+            if not _is_usable_status(r.get("Status", "")):
                 continue
             y = _read_float(r, metric_col)
             if y is None or not (y > 0.0):
                 continue
             mir_p = _clean_pass_name(r.get("MIR_Pass"))
             llvm_p = _clean_pass_name(r.get("LLVM_Pass"))
+            # Raw workload CSVs may encode the analysis baseline as
+            # (LLVM_Pass=None, MIR_Pass=All). Remap only that baseline row.
+            if mir_p == "All" and llvm_p == "None":
+                mir_p = "None"
+            # Any remaining All label is not part of the single-pass DiD grid.
+            if mir_p == "All" or llvm_p == "All":
+                continue
             groups.setdefault((mir_p, llvm_p), []).append(math.log(y))
     return groups
 

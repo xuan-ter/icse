@@ -10,7 +10,7 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR = os.path.abspath(os.path.join(BASE_DIR, "..", "..", "results", "20260531_181535"))
 OUTPUT_DIR = BASE_DIR
 RAW_CSV = os.path.join(DATA_DIR, "experiment_results.csv")
-BOOTSTRAP_SAMPLES = 2000
+BOOTSTRAP_SAMPLES = 50000
 BOOTSTRAP_SEED = 42
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 

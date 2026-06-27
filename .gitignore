@@ -20,6 +20,8 @@
 # Large local benchmark inputs
 ripgrep/benchmark_data.txt
 regex/benchmark_data.txt
+ndarray/
+faer-rs/
 
 # Keep only CSV artifacts from every results directory
 **/results/**
