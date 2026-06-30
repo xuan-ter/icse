@@ -36,7 +36,7 @@ d:\MIR_LLVM_NEW\
     interaction_summary_zh.csv
 ```
 
-Representative experiment drivers already present in the workspace include:
+Representative experiment drivers currently present in the workspace include:
 
 - `bat\experiment_bat_mir_llvm_hybrid.py`
 - `eza\experiment_eza_mir_llvm_hybrid.py`
@@ -46,6 +46,36 @@ Representative experiment drivers already present in the workspace include:
 - `quinn\experiment_quinn_mir_llvm_hybrid.py`
 - `aho-corasick\experiment_aho_mir_llvm_hybrid.py`
 - `loop_hoisting_bench\experiment_loop_mir_llvm_hybrid.py`
+- `tokio\experiment_tokio_mir_llvm_hybrid.py`
+- `serde\experiment_expanded_llvm_mir.py`
+- `image\experiment_image_mir_llvm_hybrid.py`
+- `fast_image_resize\experiment_fast_image_resize.py`
+- `trait_test\experiment_trait_mir_llvm_hybrid.py`
+- `aggregate_scalarization_bench\experiment_aggregate_scalarization_mir_llvm.py`
+- `async_state_machine_bench\experiment_async_state_machine_mir_llvm.py`
+- `branch_cfg_bench\experiment_cfg_mir_llvm_hybrid.py`
+- `iterator_pipeline_bench\experiment_iterator_pipeline_mir_llvm_hybrid.py`
+
+The main project directories currently covered by this workflow are:
+
+- `aggregate_scalarization_bench`
+- `aho-corasick`
+- `async_state_machine_bench`
+- `bat`
+- `branch_cfg_bench`
+- `eza`
+- `fast_image_resize`
+- `hyper`
+- `image`
+- `iterator_pipeline_bench`
+- `loop_hoisting_bench`
+- `quinn`
+- `regex`
+- `ripgrep`
+- `rustls`
+- `serde`
+- `tokio`
+- `trait_test`
 
 
 ## 3. Environment
@@ -343,19 +373,23 @@ The current summary script is:
 
 ### 9.2 Important implementation detail
 
-Although the script is stored under `datas\interaction_stats`, it is currently configured to write output to:
+The current script is configured to write output directly to:
 
 ```text
-d:\MIR_LLVM_NEW\analysis_all\interaction_stats\
+d:\MIR_LLVM_NEW\datas\interaction_stats\
 ```
 
 because the script contains:
 
 ```python
-OUTPUT_DIR = ROOT / "analysis_all" / "interaction_stats"
+OUTPUT_DIR = ROOT / "datas" / "interaction_stats"
 ```
 
-If you want the output CSVs to be written back into `datas\interaction_stats`, adjust that constant before running.
+The script also hard-codes preferred result sources for some projects:
+
+- `serde -> serde\analysis_new\did\interaction_results.csv`
+- `fast_image_resize -> fast_image_resize\analysis\did\interaction_results.csv`
+- `image -> image\analysis\did\interaction_results.csv`
 
 ### 9.3 Scan rule
 
@@ -378,14 +412,19 @@ python .\summarize_interactions.py
 The global summary includes:
 
 - `total_pairs`
+- `total_positive_delta_count`
+- `total_negative_delta_count`
+- `zero_count`
 - `independent_count`
+- `independent_positive_delta_count`
+- `independent_negative_delta_count`
 - `highlighted_count`
 - `positive_interaction_count`
 - `negative_interaction_count`
 - `highlighted_ratio`
 - `sig_mean_abs_delta`
 - `sig_median_abs_delta`
-- `sig_p95_abs_delta`
+- `sig_p99_abs_delta`
 - `sig_max_abs_delta`
 - `sig_mean_rel_strength`
 - `top10_abs_delta_share`
