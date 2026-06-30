@@ -256,8 +256,14 @@ def _x_label(xmode: str, metric_col: str) -> str:
     if xmode == "log1p_rel":
         return f"log10(1 + |exp(Δ) - 1|) on {metric_col} (relative, DID)"
     if xmode == "log1p_delta":
-        return f"log10(1 + |Δ|) where Δ is DID on ln({metric_col})"
-    return f"Interaction strength |Δ| where Δ is DID on ln({metric_col})"
+        return "log10(1 + |Δ|)"
+    return "Interaction strength |Δ|"
+
+
+def _display_workload_label(workload: str) -> str:
+    if workload == "fast_image_resize":
+        return "fast_image\n_resize"
+    return workload
 
 
 def plot_profiles(
@@ -293,7 +299,7 @@ def plot_profiles(
     fig, ax = plt.subplots(figsize=(13, fig_h))
 
     ys = list(range(n))
-    labels = [p.workload for p in profiles]
+    labels = [_display_workload_label(p.workload) for p in profiles]
     x_max_raw = max((p.max_v for p in profiles), default=1.0)
 
     for i, p in enumerate(profiles):
@@ -309,25 +315,31 @@ def plot_profiles(
             y + 0.28,
             f"TR={p.tail_ratio:.2f}  ER={p.extreme_ratio:.2f}",
             fontsize=18.0,
+            fontweight="bold",
             color="#202124",
             ha="left",
             va="center",
         )
 
     ax.set_yticks(ys)
-    ax.set_yticklabels(labels, fontsize=23.04)
+    ax.set_yticklabels(labels, fontsize=23.04, fontweight="bold")
     ax.invert_yaxis()
     ax.set_ylim(n - 0.5, -0.5)
 
-    ax.set_xlabel(_x_label(xmode, metric_col), fontsize=24.0)
-    ax.set_title(title, fontsize=26.4)
+    ax.set_xlabel(_x_label(xmode, metric_col), fontsize=24.0, fontweight="bold")
+    ax.xaxis.set_label_coords(0.46, -0.06)
     ax.grid(axis="x", linestyle="--", alpha=0.25)
-    ax.legend(loc="lower right", fontsize=21.0, frameon=True, markerscale=1.5)
+    ax.legend(loc="lower right", prop={"size": 21.0, "weight": "bold"}, frameon=True, markerscale=1.5)
 
     ax.set_xlim(left=0.0, right=x_max_raw * 1.12)
     ax.tick_params(axis="x", labelsize=24.0)
+    for tick in ax.get_xticklabels():
+        tick.set_fontweight("bold")
+    for tick in ax.get_yticklabels():
+        tick.set_fontweight("bold")
 
-    fig.tight_layout()
+    fig.suptitle(title, fontsize=30.0, fontweight="bold", x=0.5, y=0.975, ha="center")
+    fig.tight_layout(rect=(0.0, 0.0, 1.0, 0.985))
     os.makedirs(os.path.dirname(out_png), exist_ok=True)
     fig.savefig(out_png, dpi=250)
     fig.savefig(out_pdf)

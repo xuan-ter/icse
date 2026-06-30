@@ -125,18 +125,18 @@ def _topk_metrics(rows: List[Dict[str, object]], k: int) -> Optional[Dict[str, o
     count_items = sorted(counts.items(), key=lambda kv: (-kv[1], kv[0]))
     mass_items = sorted(mass.items(), key=lambda kv: (-kv[1], kv[0]))
     unique_mirs = len(counts)
-    top3_count_share = sum(v for _, v in count_items[:3]) / float(len(top))
-    top5_absdelta_share = sum(v for _, v in mass_items[:5]) / total_mass if total_mass > 0 else 0.0
+    top3_count_percentage = sum(v for _, v in count_items[:3]) / float(len(top))
+    top5_absdelta_percentage = sum(v for _, v in mass_items[:5]) / total_mass if total_mass > 0 else 0.0
     top1_mir = count_items[0][0]
-    top1_count_share = count_items[0][1] / float(len(top))
+    top1_count_percentage = count_items[0][1] / float(len(top))
 
     return {
         "K": int(k),
         "unique_mir_in_topk": int(unique_mirs),
-        "top3_count_share": float(top3_count_share),
-        "top5_absdelta_share": float(top5_absdelta_share),
+        "top3_count_percentage": float(top3_count_percentage),
+        "top5_absdelta_percentage": float(top5_absdelta_percentage),
         "top1_mir": top1_mir,
-        "top1_count_share": float(top1_count_share),
+        "top1_count_percentage": float(top1_count_percentage),
     }
 
 
@@ -158,10 +158,10 @@ def build_summary_rows(*, benchmark_dir: str, metric_col: str, ks: Sequence[int]
                     "workload": workload,
                     "K": int(metrics["K"]),
                     "unique_mir_in_topk": int(metrics["unique_mir_in_topk"]),
-                    "top3_count_share": float(metrics["top3_count_share"]),
-                    "top5_absdelta_share": float(metrics["top5_absdelta_share"]),
+                    "top3_count_percentage": float(metrics["top3_count_percentage"]),
+                    "top5_absdelta_percentage": float(metrics["top5_absdelta_percentage"]),
                     "top1_mir": str(metrics["top1_mir"]),
-                    "top1_count_share": float(metrics["top1_count_share"]),
+                    "top1_count_percentage": float(metrics["top1_count_percentage"]),
                 }
             )
     return out
@@ -176,10 +176,10 @@ def write_summary_csv(*, rows: List[Dict[str, object]], out_csv: str) -> None:
                 "workload",
                 "K",
                 "unique_mir_in_topk",
-                "top3_count_share",
-                "top5_absdelta_share",
+                "top3_count_percentage",
+                "top5_absdelta_percentage",
                 "top1_mir",
-                "top1_count_share",
+                "top1_count_percentage",
             ]
         )
         for r in rows:
@@ -188,10 +188,10 @@ def write_summary_csv(*, rows: List[Dict[str, object]], out_csv: str) -> None:
                     r["workload"],
                     r["K"],
                     r["unique_mir_in_topk"],
-                    f"{float(r['top3_count_share']):.6f}",
-                    f"{float(r['top5_absdelta_share']):.6f}",
+                    f"{float(r['top3_count_percentage']):.6f}",
+                    f"{float(r['top5_absdelta_percentage']):.6f}",
                     r["top1_mir"],
-                    f"{float(r['top1_count_share']):.6f}",
+                    f"{float(r['top1_count_percentage']):.6f}",
                 ]
             )
 
@@ -216,8 +216,8 @@ def plot_summary(
     fig, axes = plt.subplots(3, 1, figsize=(12.0, 11.0), sharex=True)
     metrics = [
         ("unique_mir_in_topk", "Unique MIR Passes in Top-K", False),
-        ("top3_count_share", "Top-3 MIR Share of Top-K Pair Count", True),
-        ("top5_absdelta_share", "Top-5 MIR Share of Top-K |Delta| Mass", True),
+        ("top3_count_percentage", "Top-3 MIR Percentage of Top-K Pair Count", True),
+        ("top5_absdelta_percentage", "Top-5 MIR Percentage of Top-K |Delta| Mass", True),
     ]
     colors = ["#4c78a8", "#f58518", "#54a24b", "#e45756"]
     width = 0.36 if len(k_values) <= 2 else 0.22

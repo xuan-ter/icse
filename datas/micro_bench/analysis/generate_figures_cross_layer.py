@@ -29,6 +29,7 @@ plt.rcParams.update(
 class BenchConfig:
     name: str
     scenario_field: str | None
+    csv_path: str
 
 
 def _safe_float(v: str) -> float | None:
@@ -91,25 +92,30 @@ def list_benchmarks(micro_results_dir: str) -> list[BenchConfig]:
     benches: list[BenchConfig] = []
     for entry in sorted(os.listdir(micro_results_dir)):
         p = os.path.join(micro_results_dir, entry)
-        if not os.path.isdir(p):
-            continue
-        if entry == "figures_cross_layer":
-            continue
-        csv_path = os.path.join(p, "experiment_results.csv")
-        if not os.path.exists(csv_path):
-            continue
+        csv_path = ""
+        bench_name = entry
+        if os.path.isdir(p):
+            if entry == "figures_cross_layer":
+                continue
+            csv_path = os.path.join(p, "experiment_results.csv")
+            if not os.path.exists(csv_path):
+                continue
+        else:
+            if not entry.lower().endswith(".csv"):
+                continue
+            csv_path = p
+            bench_name = os.path.splitext(entry)[0]
         with open(csv_path, newline="") as f:
             r = csv.reader(f)
             header = next(r, None)
         if not header:
             continue
-        benches.append(BenchConfig(name=entry, scenario_field=_scenario_field(header)))
+        benches.append(BenchConfig(name=bench_name, scenario_field=_scenario_field(header), csv_path=csv_path))
     return benches
 
 
 def load_bench_medians(micro_results_dir: str, bench: BenchConfig):
-    csv_path = os.path.join(micro_results_dir, bench.name, "experiment_results.csv")
-    with open(csv_path, newline="") as f:
+    with open(bench.csv_path, newline="") as f:
         r = csv.DictReader(f)
         scenario_field = bench.scenario_field if bench.scenario_field in (r.fieldnames or []) else None
 
@@ -564,6 +570,7 @@ def main():
         "iterator_pipeline_bench",
         "loop_hoisting_bench",
         "trait_monomorphization_bench",
+        "trait_monomorphization",
     ]
     by_name = {b.name: b for b in benches}
     ordered = [by_name[n] for n in want if n in by_name]

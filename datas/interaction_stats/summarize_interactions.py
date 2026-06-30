@@ -38,7 +38,7 @@ ZH_COLUMNS = {
     "highlighted_ratio": "高亮交互占比",
     "sig_mean_abs_delta": "显著交互平均绝对delta",
     "sig_median_abs_delta": "显著交互绝对delta中位数",
-    "sig_p95_abs_delta": "显著交互绝对delta的P95",
+    "sig_p99_abs_delta": "显著交互绝对delta的P99",
     "sig_max_abs_delta": "显著交互最大绝对delta",
     "sig_mean_rel_strength": "显著交互平均相对影响强度",
     "top10_abs_delta_share": "前10强交互绝对delta占比",
@@ -122,13 +122,13 @@ def summarize_one(project, csv_path):
     if sig_abs_delta.empty:
         sig_mean_abs_delta = float("nan")
         sig_median_abs_delta = float("nan")
-        sig_p95_abs_delta = float("nan")
+        sig_p99_abs_delta = float("nan")
         sig_max_abs_delta = float("nan")
         sig_mean_rel_strength = float("nan")
     else:
         sig_mean_abs_delta = float(sig_abs_delta.mean())
         sig_median_abs_delta = float(sig_abs_delta.median())
-        sig_p95_abs_delta = float(sig_abs_delta.quantile(0.95))
+        sig_p99_abs_delta = float(sig_abs_delta.quantile(0.99))
         sig_max_abs_delta = float(sig_abs_delta.max())
         sig_mean_rel_strength = float(sig_rel_strength.mean())
 
@@ -155,7 +155,7 @@ def summarize_one(project, csv_path):
         "highlighted_ratio": highlighted_count / total_pairs if total_pairs else 0.0,
         "sig_mean_abs_delta": sig_mean_abs_delta,
         "sig_median_abs_delta": sig_median_abs_delta,
-        "sig_p95_abs_delta": sig_p95_abs_delta,
+        "sig_p99_abs_delta": sig_p99_abs_delta,
         "sig_max_abs_delta": sig_max_abs_delta,
         "sig_mean_rel_strength": sig_mean_rel_strength,
         "top10_abs_delta_share": top10_abs_delta_share,

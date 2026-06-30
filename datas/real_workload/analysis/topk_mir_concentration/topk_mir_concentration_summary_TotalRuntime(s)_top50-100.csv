@@ -1,4 +1,4 @@
-workload,K,unique_mir_in_topk,top3_count_share,top5_absdelta_share,top1_mir,top1_count_share
+workload,K,unique_mir_in_topk,top3_count_percentage,top5_absdelta_percentage,top1_mir,top1_count_percentage
 aho-corasick,50,8,0.900000,0.943370,JumpThreading,0.680000
 aho-corasick,100,13,0.790000,0.873618,JumpThreading,0.360000
 bat,50,4,0.980000,1.000000,Inline,0.620000

@@ -7,7 +7,7 @@ import seaborn as sns
 
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DATA_DIR = os.path.abspath(os.path.join(BASE_DIR, "..", "..", "results", "20260310_224816"))
+DATA_DIR = os.path.abspath(os.path.join(BASE_DIR, "..", "..", "results", "run_20260531_144434"))
 OUTPUT_DIR = BASE_DIR
 RAW_CSV = os.path.join(DATA_DIR, "experiment_results.csv")
 BOOTSTRAP_SAMPLES = 50000
