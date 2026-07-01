@@ -1,0 +1,33 @@
+// MIR for `main` after ElaborateBoxDerefs
+
+fn main() -> () {
+    let mut _0: ();
+    let _1: ();
+    let _2: ();
+    let mut _3: std::fmt::Arguments<'_>;
+
+    bb0: {
+        StorageLive(_1);
+        StorageLive(_2);
+        StorageLive(_3);
+        _3 = Arguments::<'_>::from_str(const "Hello, MIR dummy!\n") -> [return: bb1, unwind continue];
+    }
+
+    bb1: {
+        _2 = _print(move _3) -> [return: bb2, unwind continue];
+    }
+
+    bb2: {
+        StorageDead(_3);
+        StorageDead(_2);
+        _1 = const ();
+        StorageDead(_1);
+        _0 = const ();
+        return;
+    }
+}
+
+alloc1 (size: 18, align: 1) {
+    0x00 │ 48 65 6c 6c 6f 2c 20 4d 49 52 20 64 75 6d 6d 79 │ Hello, MIR dummy
+    0x10 │ 21 0a                                           │ !.
+}

@@ -1,0 +1,9 @@
+Module Level
+-disable-atexit-based-global-dtor-lowering
+-disable-bitcode-version-upgrade
+-disable-cgdata-for-merging
+-disable-global-outlining
+-disable-merge-into-combines
+-disable-mergeicmps
+-disable-thinlto-funcattrs
+-disable-whole-program-visibility

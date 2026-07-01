@@ -1,0 +1,24 @@
+MIR Tunable Optimizations (Suitable for Experiments)
+====================================================
+Pass Name                                          | Category
+----------------------------------------------------------------------
+CopyProp                                           | Tunable Optimization
+DataflowConstProp                                  | Tunable Optimization
+DeadStoreElimination-final                         | Tunable Optimization
+DeadStoreElimination-initial                       | Tunable Optimization
+DestinationPropagation                             | Tunable Optimization
+EarlyOtherwiseBranch                               | Tunable Optimization
+EnumSizeOpt                                        | Tunable Optimization
+ForceInline                                        | Tunable Optimization
+GVN                                                | Tunable Optimization
+ImpossiblePredicates                               | Tunable Optimization
+Inline                                             | Tunable Optimization
+InstSimplify-after-simplifycfg                     | Tunable Optimization
+InstSimplify-before-inline                         | Tunable Optimization
+JumpThreading                                      | Tunable Optimization
+MatchBranchSimplification                          | Tunable Optimization
+ReferencePropagation                               | Tunable Optimization
+ScalarReplacementOfAggregates                      | Tunable Optimization
+SingleUseConsts                                    | Tunable Optimization
+UnreachableEnumBranching                           | Tunable Optimization
+UnreachablePropagation                             | Tunable Optimization

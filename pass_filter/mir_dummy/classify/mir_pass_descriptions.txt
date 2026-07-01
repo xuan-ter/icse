@@ -1,0 +1,84 @@
+MIR Optimization Passes Description
+===================================
+
+This file contains the functional descriptions of all MIR tunable optimizations listed in `mir_tunable_optimizations.txt`.
+
+1. CopyProp (Copy Propagation)
+   - 功能：消除冗余的变量拷贝。如果变量 A 被赋值给 B，且 A 在此期间未被修改，则将后续使用 B 的地方替换为 A，从而减少不必要的局部变量和赋值操作。
+   - 作用：减少栈空间占用，减少指令数量。
+
+2. DataflowConstProp (Dataflow Constant Propagation)
+   - 功能：基于数据流分析的常量传播。如果分析确定某个变量在运行时必然是某个常量值，则在编译期直接将其替换为该常量。同时也能计算简单的常量表达式。
+   - 作用：减少运行时计算开销，消除死代码分支。
+
+3. DeadStoreElimination-initial (Dead Store Elimination - Initial)
+   - 功能：早期的死存储消除。删除那些被写入但随后从未被读取的变量赋值。
+   - 作用：减少无用的内存写入操作，清理代码。
+
+4. DeadStoreElimination-final (Dead Store Elimination - Final)
+   - 功能：晚期的死存储消除。在其他优化（如内联）可能暴露出新的死存储机会后，再次运行以清理残留的无效写入。
+   - 作用：进一步净化代码，减少生成的机器码体积。
+
+5. DestinationPropagation
+   - 功能：目标传播。消除不必要的中间临时变量赋值，将计算结果直接写入最终目标变量（例如，将 `x = y; z = x;` 优化为直接写入 `z`，如果 `x` 不再使用）。
+   - 作用：显著减少 MIR 中的赋值语句数量和局部变量数量。
+
+6. EarlyOtherwiseBranch
+   - 功能：优化 `match` 表达式中的 `otherwise` 分支。当多个分支通过 `otherwise` 块处理时，尝试优化其控制流结构。
+   - 作用：简化复杂的模式匹配生成的控制流图。
+
+7. EnumSizeOpt
+   - 功能：枚举大小优化。针对 `Option<T>` 等枚举类型，利用 T 的特定值（如空指针）来表示 `None`，从而消除枚举的判别符（discriminant）字段，压缩枚举占用的内存空间。
+   - 作用：减小数据结构大小，提升缓存命中率。
+
+8. ForceInline
+   - 功能：强制内联。专门处理标记为 `#[inline(always)]` 的函数，确保它们在任何情况下都被内联，忽略常规的内联代价模型。
+   - 作用：满足用户的特定性能需求，消除函数调用开销。
+
+9. GVN (Global Value Numbering)
+   - 功能：全局值编号。识别并合并计算结果相同的不同指令（公共子表达式消除）。如果两个计算逻辑完全一致且输入相同，则只保留一个。
+   - 作用：减少重复计算，缩减代码体积。
+
+10. ImpossiblePredicates
+    - 功能：消除不可能的谓词。识别并移除逻辑上永远为假的条件判断（例如基于类型范围推断出的不可能条件）。
+    - 作用：清理死代码分支，简化控制流。
+
+11. Inline
+    - 功能：函数内联。根据启发式代价模型（Cost Model），将小型或热点函数的函数体直接嵌入到调用点，替代函数调用指令。
+    - 作用：消除函数调用开销（压栈/跳转），并为后续优化（如常量传播）暴露更多上下文信息。这是提升性能最关键的 Pass 之一。
+
+12. InstSimplify-after-simplifycfg (Instruction Simplification)
+    - 功能：在控制流图简化（SimplifyCfg）之后运行的指令化简。利用代数恒等式（如 `x + 0 -> x`, `x * 1 -> x`）简化算术和逻辑运算。
+    - 作用：减少指令周期，降低计算复杂度。
+
+13. InstSimplify-before-inline (Instruction Simplification)
+    - 功能：在内联之前运行的指令化简。目的是先清理简单的冗余计算，使得内联器能更准确地估算函数体大小，从而做出更好的内联决策。
+    - 作用：辅助内联决策，预先优化代码。
+
+14. JumpThreading
+    - 功能：跳转线程化。分析条件跳转，如果能确定前一个块的执行路径决定了当前块的跳转方向，则直接将前一个块连接到最终目标，跳过中间块。
+    - 作用：消除不必要的条件判断，拉直执行路径，提升流水线效率。
+
+15. MatchBranchSimplification
+    - 功能：`match` 分支简化。针对复杂的 `match` 语句生成的开关结构进行优化，合并相同的处理逻辑，简化判定树。
+    - 作用：优化模式匹配的性能，减少分支预测失败。
+
+16. ReferencePropagation
+    - 功能：引用传播。类似于拷贝传播，但专门针对引用（&T）。如果一个引用只是另一个引用的别名且未被修改，则直接使用原引用。
+    - 作用：减少间接寻址层级，辅助借用检查后的代码清理。
+
+17. ScalarReplacementOfAggregates (SROA)
+    - 功能：聚合体标量替换。将结构体（struct）或元组（tuple）拆解为独立的标量字段变量。
+    - 作用：这是至关重要的优化，因为它允许独立的字段被放入寄存器（而不是必须留在内存栈上），极大提升了寄存器分配器的效率和程序性能。
+
+18. SingleUseConsts
+    - 功能：单次使用常量优化。如果一个常量只被使用一次，可能会调整其生成策略以优化代码结构。
+    - 作用：微调常量的使用方式，减少寄存器压力。
+
+19. UnreachableEnumBranching
+    - 功能：消除不可达的枚举分支。基于枚举定义的变体（Variant）范围，证明某些 switch 分支（如 `match` 的默认分支）永远不会被执行，将其标记为 Unreachable。
+    - 作用：告诉后端 LLVM 这些路径不可达，允许后端进行更激进的优化（如死代码消除）。
+
+20. UnreachablePropagation
+    - 功能：不可达传播。如果控制流图中的某个节点被标记为 Unreachable，则所有通向它的路径也可以被修剪或标记。
+    - 作用：广泛地清理死代码区域，大幅简化控制流图。

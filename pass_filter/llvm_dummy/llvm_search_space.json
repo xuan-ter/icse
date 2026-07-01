@@ -1,0 +1,640 @@
+{
+  "description": "LLVM Tuning Search Space",
+  "passes": {
+    "block-placement": {
+      "switches": [
+        "-disable-block-placement"
+      ],
+      "parameters": {
+        "ext-tsp-block-placement-max-blocks": {
+          "min": 0,
+          "max": 100,
+          "step": 10,
+          "default": 0
+        }
+      }
+    },
+    "dce": {
+      "switches": [
+        "-disable-machine-dce"
+      ],
+      "parameters": {
+        "ssc-dce-limit": {
+          "min": 0,
+          "max": 1000,
+          "step": 50,
+          "default": 100
+        }
+      }
+    },
+    "inline": {
+      "switches": [
+        "-disable-preinline"
+      ],
+      "parameters": {
+        "amdgpu-inline-arg-alloca-cost": {
+          "min": 0,
+          "max": 200,
+          "step": 10,
+          "default": 0
+        },
+        "asan-max-inline-poisoning-size": {
+          "min": 0,
+          "max": 2048,
+          "step": 64,
+          "default": 256
+        },
+        "combiner-tokenfactor-inline-limit": {
+          "min": 0,
+          "max": 1000,
+          "step": 50,
+          "default": 100
+        },
+        "inline-cold-callsite-threshold": {
+          "min": 0,
+          "max": 1000,
+          "step": 50,
+          "default": 225
+        },
+        "inline-instr-cost": {
+          "min": 0,
+          "max": 200,
+          "step": 10,
+          "default": 0
+        },
+        "inline-memaccess-cost": {
+          "min": 0,
+          "max": 200,
+          "step": 10,
+          "default": 0
+        },
+        "inline-size-allowance": {
+          "min": 0,
+          "max": 2048,
+          "step": 64,
+          "default": 256
+        },
+        "inline-threshold": {
+          "min": 0,
+          "max": 1000,
+          "step": 50,
+          "default": 225
+        },
+        "inlinecold-threshold": {
+          "min": 0,
+          "max": 1000,
+          "step": 50,
+          "default": 225
+        },
+        "inlinedefault-threshold": {
+          "min": 0,
+          "max": 1000,
+          "step": 50,
+          "default": 225
+        }
+      }
+    },
+    "licm": {
+      "switches": [
+        "-disable-licm-promotion",
+        "-disable-machine-licm",
+        "-disable-postra-machine-licm"
+      ],
+      "parameters": {
+        "licm-max-num-fp-reassociations": {
+          "min": 0,
+          "max": 100,
+          "step": 10,
+          "default": 0
+        },
+        "licm-max-num-int-reassociations": {
+          "min": 0,
+          "max": 100,
+          "step": 10,
+          "default": 0
+        },
+        "licm-max-num-uses-traversed": {
+          "min": 0,
+          "max": 100,
+          "step": 10,
+          "default": 0
+        },
+        "licm-mssa-max-acc-promotion": {
+          "min": 0,
+          "max": 100,
+          "step": 10,
+          "default": 0
+        },
+        "licm-versioning-max-depth-threshold": {
+          "min": 0,
+          "max": 500,
+          "step": 10,
+          "default": 50
+        }
+      }
+    },
+    "sink": {
+      "switches": [
+        "-disable-machine-sink",
+        "-disable-postra-machine-sink"
+      ],
+      "parameters": {
+        "instcombine-max-sink-users": {
+          "min": 0,
+          "max": 100,
+          "step": 10,
+          "default": 0
+        },
+        "machine-sink-cycle-limit": {
+          "min": 0,
+          "max": 1000,
+          "step": 50,
+          "default": 100
+        },
+        "machine-sink-load-blocks-threshold": {
+          "min": 0,
+          "max": 500,
+          "step": 10,
+          "default": 50
+        },
+        "machine-sink-load-instrs-threshold": {
+          "min": 0,
+          "max": 500,
+          "step": 10,
+          "default": 50
+        },
+        "machine-sink-split-probability-threshold": {
+          "min": 0,
+          "max": 500,
+          "step": 10,
+          "default": 50
+        },
+        "max-uses-for-sinking": {
+          "min": 0,
+          "max": 100,
+          "step": 10,
+          "default": 0
+        },
+        "sink-freq-percent-threshold": {
+          "min": 0,
+          "max": 500,
+          "step": 10,
+          "default": 50
+        }
+      }
+    },
+    "aggressive-instcombine": {
+      "switches": [],
+      "parameters": {
+        "aggressive-instcombine-max-scan-instrs": {
+          "min": 0,
+          "max": 100,
+          "step": 10,
+          "default": 0
+        }
+      }
+    },
+    "da": {
+      "switches": [],
+      "parameters": {
+        "da-miv-max-level-threshold": {
+          "min": 0,
+          "max": 500,
+          "step": 10,
+          "default": 50
+        }
+      }
+    },
+    "dse": {
+      "switches": [],
+      "parameters": {
+        "dse-memoryssa-defs-per-block-limit": {
+          "min": 0,
+          "max": 1000,
+          "step": 50,
+          "default": 100
+        },
+        "dse-memoryssa-otherbb-cost": {
+          "min": 0,
+          "max": 200,
+          "step": 10,
+          "default": 0
+        },
+        "dse-memoryssa-partial-store-limit": {
+          "min": 0,
+          "max": 1000,
+          "step": 50,
+          "default": 100
+        },
+        "dse-memoryssa-samebb-cost": {
+          "min": 0,
+          "max": 200,
+          "step": 10,
+          "default": 0
+        },
+        "dse-memoryssa-scanlimit": {
+          "min": 0,
+          "max": 1000,
+          "step": 50,
+          "default": 100
+        },
+        "dse-memoryssa-walklimit": {
+          "min": 0,
+          "max": 1000,
+          "step": 50,
+          "default": 100
+        },
+        "expand-condsets-coa-limit": {
+          "min": 0,
+          "max": 1000,
+          "step": 50,
+          "default": 100
+        },
+        "expand-condsets-tfr-limit": {
+          "min": 0,
+          "max": 1000,
+          "step": 50,
+          "default": 100
+        }
+      }
+    },
+    "function": {
+      "switches": [],
+      "parameters": {
+        "cvp-max-functions-per-value": {
+          "min": 0,
+          "max": 100,
+          "step": 10,
+          "default": 0
+        },
+        "funcspec-min-function-size": {
+          "min": 0,
+          "max": 2048,
+          "step": 64,
+          "default": 256
+        },
+        "jump-table-to-switch-function-size-threshold": {
+          "min": 0,
+          "max": 500,
+          "step": 10,
+          "default": 50
+        },
+        "pgo-function-size-threshold": {
+          "min": 0,
+          "max": 500,
+          "step": 10,
+          "default": 50
+        }
+      }
+    },
+    "gvn": {
+      "switches": [],
+      "parameters": {
+        "gvn-hoist-max-bbs": {
+          "min": 0,
+          "max": 100,
+          "step": 10,
+          "default": 0
+        },
+        "gvn-hoist-max-chain-length": {
+          "min": 0,
+          "max": 100,
+          "step": 10,
+          "default": 0
+        },
+        "gvn-hoist-max-depth": {
+          "min": 0,
+          "max": 32,
+          "step": 1,
+          "default": 8
+        },
+        "gvn-max-block-speculations": {
+          "min": 0,
+          "max": 100,
+          "step": 10,
+          "default": 0
+        },
+        "gvn-max-hoisted": {
+          "min": 0,
+          "max": 100,
+          "step": 10,
+          "default": 0
+        },
+        "gvn-max-num-deps": {
+          "min": 0,
+          "max": 100,
+          "step": 10,
+          "default": 0
+        },
+        "gvn-max-num-insns": {
+          "min": 0,
+          "max": 100,
+          "step": 10,
+          "default": 0
+        },
+        "gvn-max-num-visited-insts": {
+          "min": 0,
+          "max": 100,
+          "step": 10,
+          "default": 0
+        }
+      }
+    },
+    "instcombine": {
+      "switches": [],
+      "parameters": {
+        "aggressive-instcombine-max-scan-instrs": {
+          "min": 0,
+          "max": 100,
+          "step": 10,
+          "default": 0
+        },
+        "instcombine-max-copied-from-constant-users": {
+          "min": 0,
+          "max": 100,
+          "step": 10,
+          "default": 0
+        },
+        "instcombine-max-num-phis": {
+          "min": 0,
+          "max": 100,
+          "step": 10,
+          "default": 0
+        },
+        "instcombine-max-sink-users": {
+          "min": 0,
+          "max": 100,
+          "step": 10,
+          "default": 0
+        },
+        "instcombine-maxarray-size": {
+          "min": 0,
+          "max": 2048,
+          "step": 64,
+          "default": 256
+        },
+        "instcombine-negator-max-depth": {
+          "min": 0,
+          "max": 32,
+          "step": 1,
+          "default": 8
+        },
+        "instcombine-simplify-vector-elts-depth": {
+          "min": 0,
+          "max": 32,
+          "step": 1,
+          "default": 8
+        }
+      }
+    },
+    "jump-threading": {
+      "switches": [],
+      "parameters": {
+        "jump-threading-implication-search-threshold": {
+          "min": 0,
+          "max": 500,
+          "step": 10,
+          "default": 50
+        },
+        "jump-threading-phi-threshold": {
+          "min": 0,
+          "max": 500,
+          "step": 10,
+          "default": 50
+        },
+        "jump-threading-threshold": {
+          "min": 0,
+          "max": 500,
+          "step": 10,
+          "default": 50
+        }
+      }
+    },
+    "loop-rotate": {
+      "switches": [],
+      "parameters": {
+        "rotation-max-header-size": {
+          "min": 0,
+          "max": 2048,
+          "step": 64,
+          "default": 256
+        }
+      }
+    },
+    "loop-unroll": {
+      "switches": [],
+      "parameters": {
+        "amdgpu-unroll-max-block-to-analyze": {
+          "min": 0,
+          "max": 100,
+          "step": 10,
+          "default": 0
+        },
+        "amdgpu-unroll-threshold-if": {
+          "min": 0,
+          "max": 500,
+          "step": 10,
+          "default": 50
+        },
+        "amdgpu-unroll-threshold-local": {
+          "min": 0,
+          "max": 500,
+          "step": 10,
+          "default": 50
+        },
+        "amdgpu-unroll-threshold-private": {
+          "min": 0,
+          "max": 500,
+          "step": 10,
+          "default": 50
+        },
+        "partial-unrolling-threshold": {
+          "min": 0,
+          "max": 500,
+          "step": 10,
+          "default": 50
+        },
+        "pragma-unroll-and-jam-threshold": {
+          "min": 0,
+          "max": 500,
+          "step": 10,
+          "default": 50
+        },
+        "pragma-unroll-full-max-iterations": {
+          "min": 0,
+          "max": 100,
+          "step": 10,
+          "default": 0
+        },
+        "pragma-unroll-threshold": {
+          "min": 0,
+          "max": 500,
+          "step": 10,
+          "default": 50
+        },
+        "unroll-and-jam-count": {
+          "min": 0,
+          "max": 100,
+          "step": 5,
+          "default": 10
+        },
+        "unroll-and-jam-threshold": {
+          "min": 0,
+          "max": 500,
+          "step": 10,
+          "default": 50
+        }
+      }
+    },
+    "memdep": {
+      "switches": [],
+      "parameters": {
+        "memdep-block-number-limit": {
+          "min": 0,
+          "max": 1000,
+          "step": 50,
+          "default": 100
+        },
+        "memdep-block-scan-limit": {
+          "min": 0,
+          "max": 1000,
+          "step": 50,
+          "default": 100
+        }
+      }
+    },
+    "module": {
+      "switches": [],
+      "parameters": {
+        "amdgpu-module-splitting-max-depth": {
+          "min": 0,
+          "max": 32,
+          "step": 1,
+          "default": 8
+        },
+        "module-inliner-top-priority-threshold": {
+          "min": 0,
+          "max": 1000,
+          "step": 50,
+          "default": 225
+        }
+      }
+    },
+    "scalar-evolution": {
+      "switches": [],
+      "parameters": {
+        "scalar-evolution-huge-expr-threshold": {
+          "min": 0,
+          "max": 500,
+          "step": 10,
+          "default": 50
+        },
+        "scalar-evolution-max-add-rec-size": {
+          "min": 0,
+          "max": 2048,
+          "step": 64,
+          "default": 256
+        },
+        "scalar-evolution-max-arith-depth": {
+          "min": 0,
+          "max": 32,
+          "step": 1,
+          "default": 8
+        },
+        "scalar-evolution-max-cast-depth": {
+          "min": 0,
+          "max": 32,
+          "step": 1,
+          "default": 8
+        },
+        "scalar-evolution-max-constant-evolving-depth": {
+          "min": 0,
+          "max": 32,
+          "step": 1,
+          "default": 8
+        },
+        "scalar-evolution-max-loop-guard-collection-depth": {
+          "min": 0,
+          "max": 32,
+          "step": 1,
+          "default": 8
+        },
+        "scalar-evolution-max-scc-analysis-depth": {
+          "min": 0,
+          "max": 32,
+          "step": 1,
+          "default": 8
+        },
+        "scalar-evolution-max-scev-compare-depth": {
+          "min": 0,
+          "max": 32,
+          "step": 1,
+          "default": 8
+        },
+        "scalar-evolution-max-scev-operations-implication-depth": {
+          "min": 0,
+          "max": 32,
+          "step": 1,
+          "default": 8
+        },
+        "scalar-evolution-max-value-compare-depth": {
+          "min": 0,
+          "max": 32,
+          "step": 1,
+          "default": 8
+        }
+      }
+    },
+    "simple-loop-unswitch": {
+      "switches": [],
+      "parameters": {
+        "simple-loop-unswitch-inject-invariant-condition-hotness-threshold": {
+          "min": 0,
+          "max": 500,
+          "step": 10,
+          "default": 50
+        },
+        "simple-loop-unswitch-memoryssa-threshold": {
+          "min": 0,
+          "max": 500,
+          "step": 10,
+          "default": 50
+        }
+      }
+    },
+    "simplifycfg": {
+      "switches": [],
+      "parameters": {
+        "simplifycfg-branch-fold-threshold": {
+          "min": 0,
+          "max": 500,
+          "step": 10,
+          "default": 50
+        },
+        "simplifycfg-hoist-common-skip-limit": {
+          "min": 0,
+          "max": 1000,
+          "step": 50,
+          "default": 100
+        },
+        "simplifycfg-max-small-block-size": {
+          "min": 0,
+          "max": 2048,
+          "step": 64,
+          "default": 256
+        }
+      }
+    },
+    "stack-safety": {
+      "switches": [],
+      "parameters": {
+        "stack-safety-max-iterations": {
+          "min": 0,
+          "max": 100,
+          "step": 10,
+          "default": 0
+        }
+      }
+    }
+  }
+}

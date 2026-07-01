@@ -1,0 +1,14 @@
+Loop Level
+-disable-arm-loloops
+-disable-hexagon-hwloops
+-disable-hexagon-loop-align
+-disable-lftr
+-disable-licm-promotion
+-disable-loop-idiom-vectorize-all
+-disable-loop-idiom-vectorize-bytecmp
+-disable-loop-level-heuristics
+-disable-lsr
+-disable-machine-licm
+-disable-postra-machine-licm
+-disable-ppc-ctrloops
+-disable-ppc-innermost-loop-align32

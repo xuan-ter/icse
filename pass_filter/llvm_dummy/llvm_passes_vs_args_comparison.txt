@@ -1,0 +1,229 @@
+=== Comparison: LLVM Standard Passes vs Disable Switches ===
+
+1. Directly Controllable Passes (1)
+   (These passes appear in both lists, meaning you can easily disable them via -disable-NAME)
+   - block-placement
+
+2. Passes WITHOUT Simple Disable Switch (70)
+   (These are standard passes that don't have a direct '-disable-NAME' switch in the probed list.
+    They might be controllable via other means, or are core passes not meant to be disabled.)
+   - adce
+   - aggressive-instcombine组合表达模式
+   - always-inlinealways_inline函数内联
+   - argpromotion将“按引用传递”的参数提升为标量
+   - basiccg基本调用图构建
+   - break-crit-edges
+   - codegenprepare优化代码生成
+   - constmerge合并重复的全局常量
+   - dce
+   - deadargelim
+   - deadarghaX0r
+   - domfrontier
+   - domtree
+   - dse
+   - extract-blocks从模块中提取基本块（用于
+   - function(print)将函数输出打印到标准错误输出
+   - function-attrs推断函数属性
+   - globaldce
+   - globalopt全局变量优化器
+   - gvn全局值编号
+   - indvars规范化归纳变量
+   - inline功能集成/内联
+   - instcombine合并冗余指令
+   - instcount统计各种类型的Instructions
+   - instnamer为匿名指令分配名称
+   - internalize
+   - ipsccp
+   - iv-users
+   - jump-threading跳转线程
+   - kernel-infoGPU内核信息
+   - lcssa
+   - licm
+   - lint静态检查
+   - loop-deletion删除死循环
+   - loop-extract将循环提取到新函数中
+   - loop-reduce
+   - loop-rotate旋转循环
+   - loop-simplify规范化自然循环
+   - loop-unroll-and-jam展开和循环
+   - loop-unroll展开循环
+   - loops自然循环信息
+   - lower-atomic降低原子固有属性至非原子形式
+   - lower-global-dtors
+   - lower-invoke降低调用次数，以用于无回溯代码生成器
+   - lower-switch
+   - mem2reg
+   - memcpyopt
+   - mergefunc合并函数
+   - mergereturn统一函数出口节点
+   - module(print)将模块打印到标准错误输出
+   - normalize将
+   - partial-inliner
+   - postdomtree
+   - reassociate重新关联表达式
+   - reg2mem将所有值降级为堆叠槽
+   - regions检测单入口单出口区域
+   - rel-lookup-table-converter相对查找表转换器
+   - sccp稀疏条件常数传播
+   - simple-loop-unswitch
+   - simplifycfg简化
+   - sink代码沉没
+   - sroa
+   - strip
+   - strip-dead-debug-info
+   - strip-dead-prototypes
+   - strip-nondebug从模块中移除除dbg符号之外的所有符号
+   - tailcallelim尾部呼叫消除
+   - transform-warning
+   - verify模块验证器
+   - 公用通行证
+
+3. Backend/Internal Switches NOT in Standard List (146)
+   (These are likely backend-specific, low-level, or legacy passes not listed in the high-level summary.
+    e.g., Hexagon/PPC specific, Machine passes, etc.)
+   - 2addr-hack (-disable-2addr-hack)
+   - a15-sd-optimization (-disable-a15-sd-optimization)
+   - adv-copy-opt (-disable-adv-copy-opt)
+   - advanced-peeling (-disable-advanced-peeling)
+   - arm-loloops (-disable-arm-loloops)
+   - arm-parallel-dsp (-disable-arm-parallel-dsp)
+   - atexit-based-global-dtor-lowering (-disable-atexit-based-global-dtor-lowering)
+   - auto-paired-vec-st (-disable-auto-paired-vec-st)
+   - auto-upgrade-debug-info (-disable-auto-upgrade-debug-info)
+   - binop-extract-shuffle (-disable-binop-extract-shuffle)
+   - bitcode-version-upgrade (-disable-bitcode-version-upgrade)
+   - bpf-peephole (-disable-bpf-peephole)
+   - branch-fold (-disable-branch-fold)
+   - bswap (-disable-bswap)
+   - cfi-fixup (-disable-cfi-fixup)
+   - cgdata-for-merging (-disable-cgdata-for-merging)
+   - cgp (-disable-cgp)
+   - cgp-branch-opts (-disable-cgp-branch-opts)
+   - cgp-delete-phis (-disable-cgp-delete-phis)
+   - cgp-ext-ld-promotion (-disable-cgp-ext-ld-promotion)
+   - cgp-gc-opts (-disable-cgp-gc-opts)
+   - cgp-select2branch (-disable-cgp-select2branch)
+   - cgp-store-extract (-disable-cgp-store-extract)
+   - chr (-disable-chr)
+   - cleanups (-disable-cleanups)
+   - complex-addr-modes (-disable-complex-addr-modes)
+   - const64 (-disable-const64)
+   - constant-hoisting (-disable-constant-hoisting)
+   - copyprop (-disable-copyprop)
+   - demotion (-disable-demotion)
+   - dfa-sched (-disable-dfa-sched)
+   - early-ifcvt (-disable-early-ifcvt)
+   - early-taildup (-disable-early-taildup)
+   - expand-reductions (-disable-expand-reductions)
+   - gep-const-evaluation (-disable-gep-const-evaluation)
+   - global-outlining (-disable-global-outlining)
+   - gotol (-disable-gotol)
+   - hcp (-disable-hcp)
+   - hexagon-amodeopt (-disable-hexagon-amodeopt)
+   - hexagon-cfgopt (-disable-hexagon-cfgopt)
+   - hexagon-dealloc-ret (-disable-hexagon-dealloc-ret)
+   - hexagon-hwloops (-disable-hexagon-hwloops)
+   - hexagon-loop-align (-disable-hexagon-loop-align)
+   - hexagon-misched (-disable-hexagon-misched)
+   - hexagon-nv-schedule (-disable-hexagon-nv-schedule)
+   - hexagon-opt-ext-to-64 (-disable-hexagon-opt-ext-to-64)
+   - hexagon-optszext (-disable-hexagon-optszext)
+   - hexagon-peephole (-disable-hexagon-peephole)
+   - hexagon-pnotp (-disable-hexagon-pnotp)
+   - hexagon-shuffle (-disable-hexagon-shuffle)
+   - hexagon-volatile-memcpy (-disable-hexagon-volatile-memcpy)
+   - hsdr (-disable-hsdr)
+   - i2p-p2i-opt (-disable-i2p-p2i-opt)
+   - icp (-disable-icp)
+   - ifcvt-diamond (-disable-ifcvt-diamond)
+   - ifcvt-forked-diamond (-disable-ifcvt-forked-diamond)
+   - ifcvt-simple (-disable-ifcvt-simple)
+   - ifcvt-simple-false (-disable-ifcvt-simple-false)
+   - ifcvt-triangle (-disable-ifcvt-triangle)
+   - ifcvt-triangle-false (-disable-ifcvt-triangle-false)
+   - ifcvt-triangle-rev (-disable-ifcvt-triangle-rev)
+   - interleaved-load-combine (-disable-interleaved-load-combine)
+   - last-run-tracking (-disable-last-run-tracking)
+   - layout-fsprofile-loader (-disable-layout-fsprofile-loader)
+   - ldsx (-disable-ldsx)
+   - lftr (-disable-lftr)
+   - licm-promotion (-disable-licm-promotion)
+   - load-widen (-disable-load-widen)
+   - loop-idiom-vectorize-all (-disable-loop-idiom-vectorize-all)
+   - loop-idiom-vectorize-bytecmp (-disable-loop-idiom-vectorize-bytecmp)
+   - loop-level-heuristics (-disable-loop-level-heuristics)
+   - lsr (-disable-lsr)
+   - machine-cse (-disable-machine-cse)
+   - machine-dce (-disable-machine-dce)
+   - machine-licm (-disable-machine-licm)
+   - machine-sink (-disable-machine-sink)
+   - mask (-disable-mask)
+   - memcpy-idiom (-disable-memcpy-idiom)
+   - memmove-idiom (-disable-memmove-idiom)
+   - memop-opt (-disable-memop-opt)
+   - merge-into-combines (-disable-merge-into-combines)
+   - mergeicmps (-disable-mergeicmps)
+   - mips-delay-filler (-disable-mips-delay-filler)
+   - mips-df-backward-search (-disable-mips-df-backward-search)
+   - mips-df-forward-search (-disable-mips-df-forward-search)
+   - mips-df-succbb-search (-disable-mips-df-succbb-search)
+   - movsx (-disable-movsx)
+   - mr-partial-inlining (-disable-mr-partial-inlining)
+   - nofree-inference (-disable-nofree-inference)
+   - non-allocatable-phys-copy-opt (-disable-non-allocatable-phys-copy-opt)
+   - nounwind-inference (-disable-nounwind-inference)
+   - nvjump (-disable-nvjump)
+   - nvptx-load-store-vectorizer (-disable-nvptx-load-store-vectorizer)
+   - nvptx-require-structured-cfg (-disable-nvptx-require-structured-cfg)
+   - ondemand-mds-loading (-disable-ondemand-mds-loading)
+   - p10-store-forward (-disable-p10-store-forward)
+   - packetizer (-disable-packetizer)
+   - partial-inlining (-disable-partial-inlining)
+   - partial-libcall-inlining (-disable-partial-libcall-inlining)
+   - peephole (-disable-peephole)
+   - phi-elim-edge-splitting (-disable-phi-elim-edge-splitting)
+   - post-ra (-disable-post-ra)
+   - postra-machine-licm (-disable-postra-machine-licm)
+   - postra-machine-sink (-disable-postra-machine-sink)
+   - ppc-cmp-opt (-disable-ppc-cmp-opt)
+   - ppc-constant-hoisting (-disable-ppc-constant-hoisting)
+   - ppc-ctrloops (-disable-ppc-ctrloops)
+   - ppc-ilp-pref (-disable-ppc-ilp-pref)
+   - ppc-innermost-loop-align32 (-disable-ppc-innermost-loop-align32)
+   - ppc-instr-form-prep (-disable-ppc-instr-form-prep)
+   - ppc-peephole (-disable-ppc-peephole)
+   - ppc-preinc (-disable-ppc-preinc)
+   - ppc-sched-addi-load (-disable-ppc-sched-addi-load)
+   - ppc-sco (-disable-ppc-sco)
+   - ppc-unaligned (-disable-ppc-unaligned)
+   - ppc-vsx-fma-mutation (-disable-ppc-vsx-fma-mutation)
+   - ppc-vsx-swap-removal (-disable-ppc-vsx-swap-removal)
+   - preheader-prot (-disable-preheader-prot)
+   - preinline (-disable-preinline)
+   - promote-alloca-to-lds (-disable-promote-alloca-to-lds)
+   - promote-alloca-to-vector (-disable-promote-alloca-to-vector)
+   - ra-fsprofile-loader (-disable-ra-fsprofile-loader)
+   - replace-with-vec-lib (-disable-replace-with-vec-lib)
+   - sample-loader-inlining (-disable-sample-loader-inlining)
+   - sdiv-smod (-disable-sdiv-smod)
+   - select-optimize (-disable-select-optimize)
+   - separate-const-offset-from-gep (-disable-separate-const-offset-from-gep)
+   - shifter-op (-disable-shifter-op)
+   - sparc-delay-filler (-disable-sparc-delay-filler)
+   - sparc-leaf-proc (-disable-sparc-leaf-proc)
+   - spill-fusing (-disable-spill-fusing)
+   - ssc (-disable-ssc)
+   - store-widen (-disable-store-widen)
+   - storeimm (-disable-storeimm)
+   - strictnode-mutation (-disable-strictnode-mutation)
+   - tail-calls (-disable-tail-calls)
+   - tail-duplicate (-disable-tail-duplicate)
+   - thinlto-funcattrs (-disable-thinlto-funcattrs)
+   - type-promotion (-disable-type-promotion)
+   - vecdbl-nv-stores (-disable-vecdbl-nv-stores)
+   - vector-combine (-disable-vector-combine)
+   - vp (-disable-vp)
+   - wasm-fallthrough-return-opt (-disable-wasm-fallthrough-return-opt)
+   - whole-program-visibility (-disable-whole-program-visibility)
+   - x86-domain-reassignment (-disable-x86-domain-reassignment)
+   - x86-lea-opt (-disable-x86-lea-opt)

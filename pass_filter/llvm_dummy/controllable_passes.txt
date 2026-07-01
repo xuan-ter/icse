@@ -1,0 +1,21 @@
+20 个可控 Pass（含全能型与调优型）
+aggressive-instcombine
+block-placement
+da
+dce
+dse
+function
+gvn
+inline
+instcombine
+jump-threading
+licm
+loop-rotate
+loop-unroll
+memdep
+module
+scalar-evolution
+simple-loop-unswitch
+simplifycfg
+sink
+stack-safety

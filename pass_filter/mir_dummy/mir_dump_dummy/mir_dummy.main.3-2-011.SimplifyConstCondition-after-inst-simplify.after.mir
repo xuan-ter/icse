@@ -1,0 +1,68 @@
+// MIR for `main` after SimplifyConstCondition-after-inst-simplify
+
+fn main() -> () {
+    let mut _0: ();
+    let _1: ();
+    let _2: ();
+    let mut _3: std::fmt::Arguments<'_>;
+    let mut _4: &str;
+    scope 1 (inlined Arguments::<'_>::from_str) {
+        let mut _5: std::ptr::NonNull<u8>;
+        let mut _6: *const u8;
+        let mut _7: std::ptr::NonNull<core::fmt::rt::Argument<'_>>;
+        let mut _8: usize;
+        let mut _9: usize;
+        let mut _10: usize;
+        scope 2 (inlined core::str::<impl str>::as_ptr) {
+            let mut _11: *const str;
+        }
+        scope 3 (inlined core::str::<impl str>::len) {
+            let _12: &[u8];
+            scope 4 (inlined core::str::<impl str>::as_bytes) {
+            }
+        }
+    }
+
+    bb0: {
+        StorageLive(_3);
+        StorageLive(_4);
+        _4 = const "Hello, MIR dummy!\n";
+        StorageLive(_5);
+        StorageLive(_6);
+        StorageLive(_11);
+        _11 = &raw const (*_4);
+        _6 = copy _11 as *const u8 (PtrToPtr);
+        StorageDead(_11);
+        _5 = copy _6 as std::ptr::NonNull<u8> (Transmute);
+        StorageDead(_6);
+        StorageLive(_7);
+        StorageLive(_8);
+        StorageLive(_9);
+        StorageLive(_10);
+        StorageLive(_12);
+        _12 = copy _4 as &[u8] (Transmute);
+        _10 = PtrMetadata(copy _12);
+        StorageDead(_12);
+        _9 = Shl(move _10, const 1_i32);
+        StorageDead(_10);
+        _8 = BitOr(move _9, const 1_usize);
+        StorageDead(_9);
+        _7 = move _8 as std::ptr::NonNull<core::fmt::rt::Argument<'_>> (Transmute);
+        StorageDead(_8);
+        _3 = Arguments::<'_> { template: move _5, args: move _7 };
+        StorageDead(_7);
+        StorageDead(_5);
+        StorageDead(_4);
+        _2 = _print(move _3) -> [return: bb1, unwind continue];
+    }
+
+    bb1: {
+        StorageDead(_3);
+        return;
+    }
+}
+
+alloc1 (size: 18, align: 1) {
+    0x00 │ 48 65 6c 6c 6f 2c 20 4d 49 52 20 64 75 6d 6d 79 │ Hello, MIR dummy
+    0x10 │ 21 0a                                           │ !.
+}

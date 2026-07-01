@@ -1,0 +1,15 @@
+MIR Performance-Only Passes
+CopyProp
+DataflowConstProp
+DestinationPropagation
+EarlyOtherwiseBranch
+ElaborateDrops
+ForceInline
+GVN
+Inline
+JumpThreading
+LowerIntrinsics
+MatchBranchSimplification
+PreCodegen
+RemoveNoopLandingPads
+ScalarReplacementOfAggregates

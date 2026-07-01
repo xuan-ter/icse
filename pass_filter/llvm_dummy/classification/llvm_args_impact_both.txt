@@ -1,0 +1,10 @@
+LLVM Performance AND Size (Core) Args
+-disable-bpf-peephole
+-disable-hexagon-peephole
+-disable-interleaved-load-combine
+-disable-machine-cse
+-disable-machine-dce
+-disable-merge-into-combines
+-disable-peephole
+-disable-ppc-peephole
+-disable-vector-combine

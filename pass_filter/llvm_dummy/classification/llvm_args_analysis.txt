@@ -1,0 +1,15 @@
+LLVM Analysis Args
+-disable-basic-aa
+-disable-check-noreturn-call
+-disable-gisel-legality-check
+-disable-ppc-ctrloop-analysis
+-disable-sched-critical-path
+-disable-sched-cycles
+-disable-sched-hazard
+-disable-sched-height
+-disable-sched-live-uses
+-disable-sched-physreg-join
+-disable-sched-reg-pressure
+-disable-sched-stalls
+-disable-sched-vrcycle
+-disable-symbolication

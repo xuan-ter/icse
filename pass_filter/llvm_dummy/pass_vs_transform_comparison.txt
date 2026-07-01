@@ -1,0 +1,127 @@
+=== LLVM Pass vs Transform Switch Comparison ===
+Total Standard Passes: 97
+Total Transform Switches: 147
+
+--- 1. Exact Matches (1) ---
+(Pass Name matches switch suffix exactly)
+block-placement                -> -disable-block-placement
+
+--- 2. Fuzzy/Related Matches (7) ---
+(Pass Name is part of switch name or vice versa)
+Pass: da
+  -> -disable-cgdata-for-merging
+
+Pass: dce
+  -> -disable-machine-dce
+
+Pass: inline
+  -> -disable-preinline
+
+Pass: licm
+  -> -disable-licm-promotion
+  -> -disable-machine-licm
+  -> -disable-postra-machine-licm
+
+Pass: loop-reduce
+  -> -disable-lsr
+
+Pass: loops
+  -> -disable-arm-loloops
+  -> -disable-hexagon-hwloops
+  -> -disable-ppc-ctrloops
+
+Pass: sink
+  -> -disable-machine-sink
+  -> -disable-postra-machine-sink
+
+--- 3. Passes with NO Direct Control Switch (89) ---
+(These might be analysis passes, mandatory passes, or named differently)
+aa-eval
+adce
+aggressive-instcombine
+always-inline
+argpromotion
+basic-aa
+basiccg
+break-crit-edges
+codegenprepare
+constmerge
+deadargelim
+deadarghaX0r
+domfrontier
+domtree
+dot-callgraph
+dot-cfg
+dot-cfg-only
+dot-dom
+dot-dom-only
+dot-post-dom
+dot-post-dom-only
+dse
+extract-blocks
+function
+function-attrs
+globaldce
+globalopt
+globals-aa
+gvn
+indvars
+instcombine
+instcount
+instnamer
+internalize
+ipsccp
+iv-users
+jump-threading
+kernel-info
+lazy-value-info
+lcssa
+lint
+loop-deletion
+loop-extract
+loop-rotate
+loop-simplify
+loop-unroll
+loop-unroll-and-jam
+lower-atomic
+lower-global-dtors
+lower-invoke
+lower-switch
+mem2reg
+memcpyopt
+memdep
+mergefunc
+mergereturn
+module
+normalize
+partial-inliner
+postdomtree
+print
+print-alias-sets
+print-callgraph
+print-callgraph-sccs
+print-cfg-sccs
+reassociate
+reg2mem
+regions
+rel-lookup-table-converter
+scalar-evolution
+sccp
+scev-aa
+simple-loop-unswitch
+simplifycfg
+sroa
+stack-safety
+strip
+strip-dead-debug-info
+strip-dead-prototypes
+strip-nondebug
+tailcallelim
+transform-warning
+verify
+view-cfg
+view-cfg-only
+view-dom
+view-dom-only
+view-post-dom
+view-post-dom-only

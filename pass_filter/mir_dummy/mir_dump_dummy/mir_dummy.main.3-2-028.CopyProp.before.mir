@@ -1,0 +1,67 @@
+// MIR for `main` before CopyProp
+
+fn main() -> () {
+    let mut _0: ();
+    let _1: ();
+    let mut _2: std::fmt::Arguments<'_>;
+    let mut _3: &str;
+    scope 1 (inlined Arguments::<'_>::from_str) {
+        let mut _4: std::ptr::NonNull<u8>;
+        let mut _5: *const u8;
+        let mut _6: std::ptr::NonNull<core::fmt::rt::Argument<'_>>;
+        let mut _7: usize;
+        let mut _8: usize;
+        let mut _9: usize;
+        scope 2 (inlined core::str::<impl str>::as_ptr) {
+            let mut _10: *const str;
+        }
+        scope 3 (inlined core::str::<impl str>::len) {
+            let _11: &[u8];
+            scope 4 (inlined core::str::<impl str>::as_bytes) {
+            }
+        }
+    }
+
+    bb0: {
+        StorageLive(_2);
+        StorageLive(_3);
+        _3 = const "Hello, MIR dummy!\n";
+        StorageLive(_4);
+        StorageLive(_5);
+        StorageLive(_10);
+        _10 = &raw const (*_3);
+        _5 = copy _10 as *const u8 (PtrToPtr);
+        StorageDead(_10);
+        _4 = copy _5 as std::ptr::NonNull<u8> (Transmute);
+        StorageDead(_5);
+        StorageLive(_6);
+        StorageLive(_7);
+        StorageLive(_8);
+        StorageLive(_9);
+        StorageLive(_11);
+        _11 = const "Hello, MIR dummy!\n" as &[u8] (Transmute);
+        _9 = PtrMetadata(copy _11);
+        StorageDead(_11);
+        _8 = Shl(move _9, const 1_i32);
+        StorageDead(_9);
+        _7 = BitOr(move _8, const 1_usize);
+        StorageDead(_8);
+        _6 = move _7 as std::ptr::NonNull<core::fmt::rt::Argument<'_>> (Transmute);
+        StorageDead(_7);
+        _2 = Arguments::<'_> { template: move _4, args: move _6 };
+        StorageDead(_6);
+        StorageDead(_4);
+        StorageDead(_3);
+        _1 = _print(move _2) -> [return: bb1, unwind continue];
+    }
+
+    bb1: {
+        StorageDead(_2);
+        return;
+    }
+}
+
+alloc1 (size: 18, align: 1) {
+    0x00 │ 48 65 6c 6c 6f 2c 20 4d 49 52 20 64 75 6d 6d 79 │ Hello, MIR dummy
+    0x10 │ 21 0a                                           │ !.
+}

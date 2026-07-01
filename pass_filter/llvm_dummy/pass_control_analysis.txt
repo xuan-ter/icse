@@ -1,0 +1,336 @@
+=== Comprehensive LLVM Pass Control Analysis ===
+Matches Standard Passes against:
+1. Transform Switches (-disable-*)
+2. Tuning Parameters (thresholds, limits, costs)
+
+Summary:
+- Fully Controllable (Switch + Tuning): 5
+- Tuning Only (Parametric): 15
+- Switch Only (On/Off): 1
+- No Direct Control Found: 76
+--------------------------------------------------
+
+### Fully Controllable (Best for Experimentation) (5)
+Pass: [block-placement]
+  [Switches]:
+    -disable-block-placement
+  [Tuning Params]:
+    ext-tsp-block-placement-max-blocks
+
+Pass: [dce]
+  [Switches]:
+    -disable-machine-dce
+  [Tuning Params]:
+    ssc-dce-limit
+
+Pass: [inline]
+  [Switches]:
+    -disable-preinline
+  [Tuning Params]:
+    amdgpu-inline-arg-alloca-cost
+    asan-max-inline-poisoning-size
+    combiner-tokenfactor-inline-limit
+    inline-cold-callsite-threshold
+    inline-instr-cost
+    inline-memaccess-cost
+    inline-size-allowance
+    inline-threshold
+    inlinecold-threshold
+    inlinedefault-threshold
+    ... and 13 more
+
+Pass: [licm]
+  [Switches]:
+    -disable-licm-promotion
+    -disable-machine-licm
+    -disable-postra-machine-licm
+  [Tuning Params]:
+    licm-max-num-fp-reassociations
+    licm-max-num-int-reassociations
+    licm-max-num-uses-traversed
+    licm-mssa-max-acc-promotion
+    licm-versioning-max-depth-threshold
+
+Pass: [sink]
+  [Switches]:
+    -disable-machine-sink
+    -disable-postra-machine-sink
+  [Tuning Params]:
+    instcombine-max-sink-users
+    machine-sink-cycle-limit
+    machine-sink-load-blocks-threshold
+    machine-sink-load-instrs-threshold
+    machine-sink-split-probability-threshold
+    max-uses-for-sinking
+    sink-freq-percent-threshold
+
+### Tuning Only (Fine-grained Control) (15)
+Pass: [aggressive-instcombine]
+  [Tuning Params]:
+    aggressive-instcombine-max-scan-instrs
+
+Pass: [da]
+  [Tuning Params]:
+    da-miv-max-level-threshold
+
+Pass: [dse]
+  [Tuning Params]:
+    dse-memoryssa-defs-per-block-limit
+    dse-memoryssa-otherbb-cost
+    dse-memoryssa-partial-store-limit
+    dse-memoryssa-samebb-cost
+    dse-memoryssa-scanlimit
+    dse-memoryssa-walklimit
+    expand-condsets-coa-limit
+    expand-condsets-tfr-limit
+
+Pass: [function]
+  [Tuning Params]:
+    cvp-max-functions-per-value
+    funcspec-min-function-size
+    jump-table-to-switch-function-size-threshold
+    pgo-function-size-threshold
+
+Pass: [gvn]
+  [Tuning Params]:
+    gvn-hoist-max-bbs
+    gvn-hoist-max-chain-length
+    gvn-hoist-max-depth
+    gvn-max-block-speculations
+    gvn-max-hoisted
+    gvn-max-num-deps
+    gvn-max-num-insns
+    gvn-max-num-visited-insts
+
+Pass: [instcombine]
+  [Tuning Params]:
+    aggressive-instcombine-max-scan-instrs
+    instcombine-max-copied-from-constant-users
+    instcombine-max-num-phis
+    instcombine-max-sink-users
+    instcombine-maxarray-size
+    instcombine-negator-max-depth
+    instcombine-simplify-vector-elts-depth
+
+Pass: [jump-threading]
+  [Tuning Params]:
+    jump-threading-implication-search-threshold
+    jump-threading-phi-threshold
+    jump-threading-threshold
+
+Pass: [loop-rotate]
+  [Tuning Params]:
+    rotation-max-header-size
+
+Pass: [loop-unroll]
+  [Tuning Params]:
+    amdgpu-unroll-max-block-to-analyze
+    amdgpu-unroll-threshold-if
+    amdgpu-unroll-threshold-local
+    amdgpu-unroll-threshold-private
+    partial-unrolling-threshold
+    pragma-unroll-and-jam-threshold
+    pragma-unroll-full-max-iterations
+    pragma-unroll-threshold
+    unroll-and-jam-count
+    unroll-and-jam-threshold
+    ... and 14 more
+
+Pass: [memdep]
+  [Tuning Params]:
+    memdep-block-number-limit
+    memdep-block-scan-limit
+
+Pass: [module]
+  [Tuning Params]:
+    amdgpu-module-splitting-max-depth
+    module-inliner-top-priority-threshold
+
+Pass: [scalar-evolution]
+  [Tuning Params]:
+    scalar-evolution-huge-expr-threshold
+    scalar-evolution-max-add-rec-size
+    scalar-evolution-max-arith-depth
+    scalar-evolution-max-cast-depth
+    scalar-evolution-max-constant-evolving-depth
+    scalar-evolution-max-loop-guard-collection-depth
+    scalar-evolution-max-scc-analysis-depth
+    scalar-evolution-max-scev-compare-depth
+    scalar-evolution-max-scev-operations-implication-depth
+    scalar-evolution-max-value-compare-depth
+
+Pass: [simple-loop-unswitch]
+  [Tuning Params]:
+    simple-loop-unswitch-inject-invariant-condition-hotness-threshold
+    simple-loop-unswitch-memoryssa-threshold
+
+Pass: [simplifycfg]
+  [Tuning Params]:
+    simplifycfg-branch-fold-threshold
+    simplifycfg-hoist-common-skip-limit
+    simplifycfg-max-small-block-size
+
+Pass: [stack-safety]
+  [Tuning Params]:
+    stack-safety-max-iterations
+
+### Switch Only (Coarse-grained Control) (1)
+Pass: [loops]
+  [Switches]:
+    -disable-arm-loloops
+    -disable-hexagon-hwloops
+    -disable-ppc-ctrloops
+
+### No Direct Control Detected (76)
+Pass: [aa-eval]
+
+Pass: [adce]
+
+Pass: [always-inline]
+
+Pass: [argpromotion]
+
+Pass: [basic-aa]
+
+Pass: [basiccg]
+
+Pass: [break-crit-edges]
+
+Pass: [codegenprepare]
+
+Pass: [constmerge]
+
+Pass: [deadargelim]
+
+Pass: [deadarghaX0r]
+
+Pass: [domfrontier]
+
+Pass: [domtree]
+
+Pass: [dot-callgraph]
+
+Pass: [dot-cfg]
+
+Pass: [dot-cfg-only]
+
+Pass: [dot-dom]
+
+Pass: [dot-dom-only]
+
+Pass: [dot-post-dom]
+
+Pass: [dot-post-dom-only]
+
+Pass: [extract-blocks]
+
+Pass: [function-attrs]
+
+Pass: [globaldce]
+
+Pass: [globalopt]
+
+Pass: [globals-aa]
+
+Pass: [indvars]
+
+Pass: [instcount]
+
+Pass: [instnamer]
+
+Pass: [internalize]
+
+Pass: [ipsccp]
+
+Pass: [iv-users]
+
+Pass: [kernel-info]
+
+Pass: [lazy-value-info]
+
+Pass: [lcssa]
+
+Pass: [lint]
+
+Pass: [loop-deletion]
+
+Pass: [loop-extract]
+
+Pass: [loop-reduce]
+
+Pass: [loop-simplify]
+
+Pass: [loop-unroll-and-jam]
+
+Pass: [lower-atomic]
+
+Pass: [lower-global-dtors]
+
+Pass: [lower-invoke]
+
+Pass: [lower-switch]
+
+Pass: [mem2reg]
+
+Pass: [memcpyopt]
+
+Pass: [mergefunc]
+
+Pass: [mergereturn]
+
+Pass: [normalize]
+
+Pass: [partial-inliner]
+
+Pass: [postdomtree]
+
+Pass: [print]
+
+Pass: [print-alias-sets]
+
+Pass: [print-callgraph]
+
+Pass: [print-callgraph-sccs]
+
+Pass: [print-cfg-sccs]
+
+Pass: [reassociate]
+
+Pass: [reg2mem]
+
+Pass: [regions]
+
+Pass: [rel-lookup-table-converter]
+
+Pass: [sccp]
+
+Pass: [scev-aa]
+
+Pass: [sroa]
+
+Pass: [strip]
+
+Pass: [strip-dead-debug-info]
+
+Pass: [strip-dead-prototypes]
+
+Pass: [strip-nondebug]
+
+Pass: [tailcallelim]
+
+Pass: [transform-warning]
+
+Pass: [verify]
+
+Pass: [view-cfg]
+
+Pass: [view-cfg-only]
+
+Pass: [view-dom]
+
+Pass: [view-dom-only]
+
+Pass: [view-post-dom]
+
+Pass: [view-post-dom-only]
+

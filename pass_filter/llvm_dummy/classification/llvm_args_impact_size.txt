@@ -1,0 +1,5 @@
+LLVM Size-Only Args
+-disable-cleanups
+-disable-mergeicmps
+-disable-phi-elim-edge-splitting
+-disable-tail-calls

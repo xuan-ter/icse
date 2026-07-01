@@ -1,0 +1,251 @@
+LLVM Optimization Passes Description
+====================================
+
+This file contains functional descriptions for LLVM passes categorized in `llvm_args_categorized_7_classes.txt`.
+
+=== Vectorization (向量化) ===
+1. -disable-binop-extract-shuffle
+   - 作用：禁止优化“二元运算后接 extract/shuffle”的模式。通常该优化试图减少向量运算后的标量提取开销。
+   - 影响：可能导致向量化代码中出现冗余的数据移动指令。
+
+2. -disable-expand-reductions
+   - 作用：禁止展开向量归约（Reduction）操作。归约是将向量所有元素合并为一个标量（如求和、最大值）。
+   - 影响：后端可能无法生成高效的 SIMD 归约指令。
+
+3. -disable-interleaved-load-combine
+   - 作用：禁止合并交错加载（Interleaved Load）。交错加载优化用于处理结构体数组（AoS）的向量化加载。
+   - 影响：在处理图像或复数等数据时，无法生成高效的 strided load 指令。
+
+4. -disable-loop-idiom-vectorize-all
+   - 作用：禁止 Loop Idiom Recognize Pass 识别并向量化所有通用的循环习语（如 memset, memcpy 模式）。
+   - 影响：无法将标准循环模式转换为库调用或优化的向量指令。
+
+5. -disable-loop-idiom-vectorize-bytecmp
+   - 作用：特指禁止向量化字节比较循环（如 strcmp, memcmp）。
+   - 影响：字符串或字节数组比较的性能可能下降。
+
+6. -disable-promote-alloca-to-vector
+   - 作用：禁止将数组形式的 `alloca`（栈分配）提升为向量寄存器。
+   - 影响：小数组操作只能通过内存访问，无法利用 SIMD 寄存器。
+
+7. -disable-replace-with-vec-lib
+   - 作用：禁止将标准数学函数调用（如 sin, cos）替换为对应的向量库函数（如 SLEEF, SVML）。
+   - 影响：在大规模数学计算中无法利用向量化数学库的优势。
+
+8. -disable-vector-combine
+   - 作用：禁止 VectorCombine Pass。这是一个通用的向量指令组合优化，试图合并冗余的 vector ops。
+   - 影响：生成较多冗余的向量插入/提取/洗牌指令。
+
+=== Loop (循环优化) ===
+9. -disable-advanced-peeling
+   - 作用：禁止高级循环剥离（Loop Peeling）。剥离循环的前几次迭代以消除循环内的边界检查或对齐问题。
+   - 影响：循环体可能包含不必要的条件判断，阻碍进一步的向量化。
+
+10. -disable-lftr (Linear Function Test Replacement)
+    - 作用：禁止线性函数测试替换。该优化将循环的退出条件从复杂的计算替换为简单的归纳变量比较。
+    - 影响：增加循环控制的指令开销，可能阻碍强度削减（LSR）。
+
+11. -disable-licm-promotion
+    - 作用：禁止 LICM（循环不变量外提）中的内存提升。内存提升将循环中对同一内存位置的读写提升到寄存器中。
+    - 影响：循环内频繁访问内存，无法利用寄存器缓存变量。
+
+12. -disable-loop-level-heuristics
+    - 作用：禁用某些特定的循环优化启发式策略。
+    - 影响：编译器可能做出次优的展开或向量化决策。
+
+13. -disable-lsr (Loop Strength Reduction)
+    - 作用：禁止循环强度削减。该优化将乘法等高代价运算替换为加法，并优化数组索引计算。
+    - 影响：循环内地址计算开销大，寄存器压力增加。
+
+14. -disable-machine-licm
+    - 作用：禁止机器码层面的循环不变量外提。
+    - 影响：在指令选择后，无法将不变量指令移出循环。
+
+15. -disable-postra-machine-licm
+    - 作用：禁止寄存器分配后的机器码 LICM。
+    - 影响：无法优化由于寄存器溢出（spill）产生的循环内加载/存储。
+
+16. -disable-preheader-prot
+    - 作用：禁止循环 Preheader 的保护/优化。
+    - 影响：循环进入前的准备代码可能未被正确优化。
+
+=== ControlFlow (控制流) ===
+17. -disable-block-placement
+    - 作用：禁止基本块布局优化。该优化尝试将频繁执行的基本块放在相邻位置以提高缓存局部性和减少跳转。
+    - 影响：增加指令缓存未命中率（I-Cache Miss），增加分支预测失败代价。
+
+18. -disable-branch-fold
+    - 作用：禁止分支折叠。合并相同的代码块，删除无用的跳转。
+    - 影响：代码体积膨胀，包含冗余的跳转指令。
+
+19. -disable-cgp-branch-opts
+    - 作用：禁止 CodeGenPrepare 阶段的分支优化。
+    - 影响：无法在代码生成前简化条件分支。
+
+20. -disable-cgp-select2branch
+    - 作用：禁止将 `select` 指令（条件传送）转换为分支跳转。在某些架构上分支比 cmov 更快或更适合。
+    - 影响：可能在特定目标架构上生成次优的条件执行代码。
+
+21. -disable-chr (Control Height Reduction)
+    - 作用：禁止控制高度缩减。该优化将多个串行的条件判断合并为一个，减少关键路径上的分支数量。
+    - 影响：在复杂逻辑判断中，分支预测压力大，执行流水线易被打断。
+
+22. -disable-early-ifcvt
+    - 作用：禁止早期的 If-Conversion。将小的条件分支转换为条件执行指令（如 ARM 的 predicable instructions）。
+    - 影响：增加短分支的数量，无法利用架构的条件执行特性。
+
+23. -disable-early-taildup
+    - 作用：禁止早期的尾部复制（Tail Duplication）。复制基本块以消除无条件跳转或优化布局。
+    - 影响：增加跳转指令，破坏控制流的线性度。
+
+24. -disable-ifcvt-* (diamond, triangle, simple, etc.)
+    - 作用：禁止各种特定形状（菱形、三角形）的 If-Conversion。
+    - 影响：无法消除特定模式的短分支。
+
+25. -disable-tail-calls
+    - 作用：禁止尾调用优化（Tail Call Optimization）。将末尾的函数调用转换为跳转，复用当前栈帧。
+    - 影响：增加栈空间使用，可能导致递归函数栈溢出，增加调用开销。
+
+26. -disable-tail-duplicate
+    - 作用：禁止通用的尾部复制 Pass。
+    - 影响：无法通过复制尾部代码来消除跳转或优化调度。
+
+=== Memory (内存优化) ===
+27. -disable-cgp-ext-ld-promotion
+    - 作用：禁止 CodeGenPrepare 中的扩展加载提升。将符号扩展/零扩展合并到加载指令中。
+    - 影响：需要额外的扩展指令，无法利用 load-extend 硬件指令。
+
+28. -disable-cgp-store-extract
+    - 作用：禁止优化 `store` 后接 `extract` 的模式。
+    - 影响：向量存储后的标量操作效率降低。
+
+29. -disable-memop-opt
+    - 作用：禁止内存操作优化（如合并连续的 store 为 memset/memcpy）。
+    - 影响：大量的逐字节/逐字复制无法转换为高效的内存库调用或块传输指令。
+
+30. -disable-separate-const-offset-from-gep
+    - 作用：禁止从 GEP（GetElementPtr）指令中分离常量偏移。该优化有助于后端寻址模式匹配。
+    - 影响：无法充分利用硬件的“基址+偏移”寻址模式，需要额外的加法指令计算地址。
+
+=== DataFlow (数据流与机器优化) ===
+31. -disable-adv-copy-opt
+    - 作用：禁止高级拷贝优化。消除不必要的寄存器拷贝。
+    - 影响：增加寄存器之间的移动指令（mov）。
+
+32. -disable-cgp-delete-phis
+    - 作用：禁止 CodeGenPrepare 删除死 PHI 节点。
+    - 影响：遗留无用的 PHI 节点，增加后续处理负担。
+
+33. -disable-cleanups
+    - 作用：禁止通用的清理 Pass。
+    - 影响：保留死代码或冗余指令。
+
+34. -disable-constant-hoisting
+    - 作用：禁止常量提升。将大常量的生成移到支配块中，以便复用。
+    - 影响：增加代码体积，多次生成相同的大常量。
+
+35. -disable-copyprop
+    - 作用：禁止拷贝传播。
+    - 影响：保留冗余的变量拷贝。
+
+36. -disable-demotion
+    - 作用：禁止值降级（Reg to Mem）。通常用于调试或处理特定限制。
+    - 影响：一般不影响优化，属于特定用途开关。
+
+37. -disable-gep-const-evaluation
+    - 作用：禁止 GEP 常量求值。
+    - 影响：无法在编译期计算已知的地址偏移。
+
+38. -disable-icp (Indirect Call Promotion)
+    - 作用：禁止间接调用提升。将热点的间接调用（函数指针）转换为比较+直接调用。
+    - 影响：无法内联虚函数或函数指针调用，分支预测困难。
+
+39. -disable-machine-cse / -disable-machine-dce
+    - 作用：禁止机器码层面的公共子表达式消除 / 死代码消除。
+    - 影响：生成冗余的机器指令。
+
+40. -disable-machine-sink
+    - 作用：禁止机器码下沉。将指令移到更接近使用的位置（如移入条件块）。
+    - 影响：在不需要结果的路径上也执行了计算。
+
+41. -disable-mergeicmps
+    - 作用：禁止合并多个 icmp 指令（如将多个字段比较合并为 memcmp）。
+    - 影响：结构体比较效率低。
+
+42. -disable-phi-elim-edge-splitting
+    - 作用：禁止 PHI 消除时的边分裂。边分裂用于解决临界边（Critical Edge）问题。
+    - 影响：可能生成较差的 PHI 消除代码（更多的 copy 指令）。
+
+43. -disable-preinline
+    - 作用：禁止预内联。
+    - 影响：错过早期的简单内联机会。
+
+44. -disable-select-optimize
+    - 作用：禁止 Select 优化 Pass。试图将复杂的 select 序列转换为控制流或更优指令。
+    - 影响：Select 指令序列可能未被优化。
+
+45. -disable-ssc (Stack Slot Coloring)
+    - 作用：禁止栈槽着色。合并生命周期不重叠的栈变量以复用栈空间。
+    - 影响：栈帧（Stack Frame）过大，增加缓存压力。
+
+46. -disable-type-promotion
+    - 作用：禁止类型提升（如将 i8/i16 运算提升为 i32 以适应寄存器宽度）。
+    - 影响：在某些架构上产生额外的截断/扩展指令，或导致部分寄存器停顿。
+
+=== Pipeline/Profile/LTO (流程与配置) ===
+47. -disable-auto-upgrade-debug-info / -disable-bitcode-version-upgrade
+    - 作用：禁止自动升级调试信息/位码版本。
+    - 影响：兼容性选项，通常不直接影响运行时性能。
+
+48. -disable-cfi-fixup
+    - 作用：禁止控制流完整性（CFI）修正。
+    - 影响：安全特性相关。
+
+49. -disable-global-outlining
+    - 作用：禁止全局外联（Machine Outliner）。提取重复的指令序列为函数。
+    - 影响：代码体积显著增加（Text Size），但可能略微提升速度（减少调用）。
+
+50. -disable-sample-loader-inlining
+    - 作用：禁止基于采样分析（Sample Profile）的内联。
+    - 影响：在使用 PGO 时，无法根据真实运行概况进行精确内联。
+
+51. -disable-thinlto-funcattrs
+    - 作用：禁止 ThinLTO 中的函数属性推断（如 no-recurse, no-unwind）。
+    - 影响：ThinLTO 链接时无法进行激进的跨模块优化。
+
+52. -disable-whole-program-visibility
+    - 作用：禁止全程序可见性假设。
+    - 影响：LTO 无法假设看到所有代码，从而必须保守处理符号导出，阻碍死代码消除。
+
+=== CodeGen (代码生成) ===
+53. -disable-2addr-hack
+    - 作用：禁止两地址指令的 Hack 处理。某些架构（如 x86）指令是两地址的（dest = src1 op src2 不成立，必须 dest = dest op src）。
+    - 影响：指令选择效率降低，增加寄存器拷贝。
+
+54. -disable-cgp (CodeGenPrepare)
+    - 作用：禁止整个 CodeGenPrepare Pass。这是 IR 到机器码转换前最重要的准备 Pass。
+    - 影响：极大影响生成的机器码质量，寻址模式、条件分支等均无法优化。
+
+55. -disable-complex-addr-modes
+    - 作用：禁止复杂寻址模式匹配。
+    - 影响：需要多条指令计算地址，无法利用 `[base + index*scale + disp]` 等硬件寻址能力。
+
+56. -disable-dfa-sched
+    - 作用：禁止基于 DFA（确定性有限自动机）的指令调度器。
+    - 影响：无法精确模拟流水线资源冲突，导致指令流水线停顿增加。
+
+57. -disable-partial-inlining
+    - 作用：禁止部分内联。只内联函数中的热点路径（如早退检查后的部分）。
+    - 影响：不得不内联整个大函数或完全不内联，灵活性差。
+
+58. -disable-peephole
+    - 作用：禁止窥孔优化。在生成代码后进行的局部指令替换（如用更快的指令序列替换慢的）。
+    - 影响：生成的汇编代码包含明显的低效指令序列。
+
+59. -disable-post-ra
+    - 作用：禁止寄存器分配后的调度/优化。
+    - 影响：无法利用最终的寄存器信息进行指令重排。
+
+60. -disable-spill-fusing
+    - 作用：禁止溢出代码融合。
+    - 影响：寄存器溢出（Spill/Reload）指令无法被合并或优化。

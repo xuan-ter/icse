@@ -1,0 +1,9 @@
+MIR Performance AND Size (Core) Passes
+InstSimplify-after-simplifycfg
+InstSimplify-before-inline
+SimplifyCfg-after-unreachable-enum-branching
+SimplifyCfg-final
+SimplifyCfg-initial
+SimplifyCfg-pre-optimizations
+SimplifyCfg-promote-consts
+UnreachablePropagation

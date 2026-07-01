@@ -1,0 +1,3152 @@
+{
+    "aarch64-base-histcnt-cost": [
+        0,
+        1,
+        2,
+        5,
+        10,
+        50
+    ],
+    "aarch64-ccmp-limit": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "aarch64-insert-extract-base-cost": [
+        0,
+        1,
+        2,
+        5,
+        10,
+        50
+    ],
+    "aarch64-load-store-const-scan-limit": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "aarch64-load-store-scan-limit": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "aarch64-max-xors": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "aarch64-min-jump-table-entries": [
+        0,
+        1,
+        2,
+        4,
+        8,
+        16
+    ],
+    "aarch64-streaming-hazard-size": [
+        0,
+        1,
+        2,
+        4,
+        8,
+        16
+    ],
+    "aarch64-sve-vector-bits-max": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "aarch64-sve-vector-bits-min": [
+        0,
+        1,
+        2,
+        4,
+        8,
+        16
+    ],
+    "aarch64-update-scan-limit": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "aggressive-instcombine-max-scan-instrs": [
+        100,
+        500,
+        1000,
+        5000
+    ],
+    "alias-set-saturation-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "amdgpu-assume-dynamic-stack-object-size": [
+        0,
+        1,
+        2,
+        4,
+        8,
+        16
+    ],
+    "amdgpu-assume-external-call-stack-size": [
+        0,
+        1,
+        2,
+        4,
+        8,
+        16
+    ],
+    "amdgpu-indirect-call-specialization-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "amdgpu-inline-arg-alloca-cost": [
+        0,
+        1,
+        2,
+        5,
+        10,
+        50
+    ],
+    "amdgpu-kernarg-preload-count": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "amdgpu-large-stride-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "amdgpu-limit-wave-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "amdgpu-max-memory-clause": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "amdgpu-max-return-arg-num-regs": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "amdgpu-membound-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "amdgpu-module-splitting-max-depth": [
+        2,
+        4,
+        8,
+        16,
+        32
+    ],
+    "amdgpu-nsa-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "amdgpu-promote-alloca-to-vector-limit": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "amdgpu-set-wave-priority-valu-insts-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "amdgpu-unroll-max-block-to-analyze": [
+        2,
+        4,
+        8,
+        16,
+        32
+    ],
+    "amdgpu-unroll-threshold-if": [
+        50,
+        100,
+        150,
+        300,
+        500
+    ],
+    "amdgpu-unroll-threshold-local": [
+        50,
+        100,
+        150,
+        300,
+        500
+    ],
+    "amdgpu-unroll-threshold-private": [
+        50,
+        100,
+        150,
+        300,
+        500
+    ],
+    "arc-opt-max-ptr-states": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "arm-constant-island-max-iteration": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "arm-parallel-dsp-load-limit": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "arm-prera-ldst-opt-reorder-limit": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "arm-promote-constant-max-size": [
+        100,
+        500,
+        1000,
+        5000
+    ],
+    "arm-promote-constant-max-total": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "asan-instrumentation-with-call-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "asan-max-inline-poisoning-size": [
+        100,
+        500,
+        1000,
+        5000
+    ],
+    "asan-max-ins-per-bb": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "asm-macro-max-nesting-depth": [
+        2,
+        4,
+        8,
+        16,
+        32
+    ],
+    "attributor-max-initialization-chain-length": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "attributor-max-iterations": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "attributor-max-potential-values": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "attributor-max-potential-values-iterations": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "attributor-max-specializations-per-call-base": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "available-load-scan-limit": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "big-basic-block-instruction-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "bitcode-flush-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "bitcode-mdindex-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "block-freq-ratio-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "bonus-inst-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "bpf-stack-size": [
+        0,
+        1,
+        2,
+        4,
+        8,
+        16
+    ],
+    "branch-hint-probability-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "cache-line-size": [
+        0,
+        1,
+        2,
+        4,
+        8,
+        16
+    ],
+    "call-with-many-arguments-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "callsite-splitting-duplication-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "capture-tracking-max-uses-to-explore": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "cgp-max-address-users-to-scan": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "chr-dup-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "chr-merge-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "cold-operand-max-cost-multiplier": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "cold-operand-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "combiner-store-merge-dependence-limit": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "combiner-tokenfactor-inline-limit": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "consthoist-min-num-to-rebase": [
+        0,
+        1,
+        2,
+        4,
+        8,
+        16
+    ],
+    "constraint-elimination-max-rows": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "csuses-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "cvp-max-functions-per-value": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "da-miv-max-level-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "dag-maps-reduction-size": [
+        0,
+        1,
+        2,
+        4,
+        8,
+        16
+    ],
+    "dataflow-edge-limit": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "default-trip-count": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "dfa-cost-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "dfa-instr-limit": [
+        100,
+        500,
+        1000,
+        5000
+    ],
+    "dfa-max-num-paths": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "dfa-max-num-visited-paths": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "dfa-max-path-length": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "dfa-sched-reg-pressure-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "dfsan-instrument-with-call-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "dmb-lookahead-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "dom-conditions-max-uses": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "dom-tree-reachability-max-bbs-to-explore": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "dse-memoryssa-defs-per-block-limit": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "dse-memoryssa-otherbb-cost": [
+        0,
+        1,
+        2,
+        5,
+        10,
+        50
+    ],
+    "dse-memoryssa-partial-store-limit": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "dse-memoryssa-samebb-cost": [
+        0,
+        1,
+        2,
+        5,
+        10,
+        50
+    ],
+    "dse-memoryssa-scanlimit": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "dse-memoryssa-walklimit": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "early-ifcvt-limit": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "eif-limit": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "epilogue-vectorization-minimum-VF": [
+        0,
+        1,
+        2,
+        4,
+        8,
+        16
+    ],
+    "expand-condsets-coa-limit": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "expand-condsets-tfr-limit": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "expand-limit": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "ext-tsp-block-placement-max-blocks": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "fast-cluster-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "fixup-max-csr-statepoints": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "flat-loop-tripcount-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "float2int-max-integer-bw": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "force-target-instruction-cost": [
+        0,
+        1,
+        2,
+        5,
+        10,
+        50
+    ],
+    "force-target-max-scalar-interleave": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "force-target-max-vector-interleave": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "force-vector-width": [
+        0,
+        1,
+        2,
+        4,
+        8,
+        16
+    ],
+    "func-profile-similarity-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "funcspec-max-block-predecessors": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "funcspec-max-clones": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "funcspec-max-codesize-growth": [
+        100,
+        500,
+        1000,
+        5000
+    ],
+    "funcspec-max-discovery-iterations": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "funcspec-max-incoming-phi-values": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "funcspec-max-iters": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "funcspec-min-codesize-savings": [
+        0,
+        1,
+        2,
+        4,
+        8,
+        16
+    ],
+    "funcspec-min-function-size": [
+        0,
+        1,
+        2,
+        4,
+        8,
+        16
+    ],
+    "funcspec-min-inlining-bonus": [
+        0,
+        1,
+        2,
+        4,
+        8,
+        16
+    ],
+    "funcspec-min-latency-savings": [
+        0,
+        1,
+        2,
+        4,
+        8,
+        16
+    ],
+    "fuse-matrix-tile-size": [
+        0,
+        1,
+        2,
+        4,
+        8,
+        16
+    ],
+    "global-merge-max-offset": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "global-merge-min-data-size": [
+        0,
+        1,
+        2,
+        4,
+        8,
+        16
+    ],
+    "global-merging-max-params": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "global-merging-min-instrs": [
+        0,
+        1,
+        2,
+        4,
+        8,
+        16
+    ],
+    "global-merging-min-merges": [
+        0,
+        1,
+        2,
+        4,
+        8,
+        16
+    ],
+    "gpsize": [
+        0,
+        1,
+        2,
+        4,
+        8,
+        16
+    ],
+    "gvn-hoist-max-bbs": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "gvn-hoist-max-chain-length": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "gvn-hoist-max-depth": [
+        2,
+        4,
+        8,
+        16,
+        32
+    ],
+    "gvn-max-block-speculations": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "gvn-max-hoisted": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "gvn-max-num-deps": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "gvn-max-num-insns": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "gvn-max-num-visited-insts": [
+        100,
+        500,
+        1000,
+        5000
+    ],
+    "hardware-loop-counter-bitwidth": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "has-predecessor-max-steps": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "hexagon-amode-growth-limit": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "hexagon-cext-limit": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "hexagon-cext-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "hexagon-frame-index-reuse-limit": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "hexagon-gen-mux-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "hexagon-hvx-loop-align-limit-ub": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "hexagon-loop-align-limit-lb": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "hexagon-loop-align-limit-ub": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "hexagon-loop-bundle-align-limit": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "hexagon-loop-edge-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "hexagon-rdf-limit": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "hexagon-small-data-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "hexagon-tiny-loop-align-limit-ub": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "hexagon-tiny-loop-bundle-align-limit": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "hexagon-vextract-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "hexbit-max-bitsplit": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "hexbit-max-extract": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "hexbit-registerset-limit": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "hlir-simplify-limit": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "hoist-loads-stores-with-cond-faulting-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "hot-callsite-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "hotcoldsplit-cold-probability-denom": [
+        0,
+        25,
+        50,
+        75,
+        90,
+        100
+    ],
+    "hotcoldsplit-max-params": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "hotcoldsplit-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "huge-size-for-split": [
+        0,
+        1,
+        2,
+        4,
+        8,
+        16
+    ],
+    "hvc-va-group-count-limit": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "hvc-va-group-size-limit": [
+        100,
+        500,
+        1000,
+        5000
+    ],
+    "icp-max-annotations": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "icp-max-num-vtable-last-candidate": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "icp-max-num-vtables": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "icp-max-prom": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "icp-remaining-percent-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "icp-total-percent-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "ifcvt-limit": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "imp-null-max-insts-to-consider": [
+        100,
+        500,
+        1000,
+        5000
+    ],
+    "inline-cold-callsite-threshold": [
+        50,
+        150,
+        225,
+        325,
+        500,
+        1000
+    ],
+    "inline-instr-cost": [
+        0,
+        1,
+        2,
+        5,
+        10,
+        50
+    ],
+    "inline-memaccess-cost": [
+        0,
+        1,
+        2,
+        5,
+        10,
+        50
+    ],
+    "inline-size-allowance": [
+        0,
+        1,
+        2,
+        4,
+        8,
+        16
+    ],
+    "inline-threshold": [
+        75,
+        225,
+        325,
+        500,
+        800
+    ],
+    "inlinecold-threshold": [
+        50,
+        150,
+        225,
+        325,
+        500,
+        1000
+    ],
+    "inlinedefault-threshold": [
+        50,
+        150,
+        225,
+        325,
+        500,
+        1000
+    ],
+    "inlinehint-threshold": [
+        50,
+        150,
+        225,
+        325,
+        500,
+        1000
+    ],
+    "insert-max-ifmap": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "insert-max-orl": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "instcombine-max-copied-from-constant-users": [
+        100,
+        500,
+        1000,
+        5000
+    ],
+    "instcombine-max-num-phis": [
+        100,
+        500,
+        1000,
+        5000
+    ],
+    "instcombine-max-sink-users": [
+        100,
+        500,
+        1000,
+        5000
+    ],
+    "instcombine-maxarray-size": [
+        100,
+        500,
+        1000,
+        5000
+    ],
+    "instcombine-negator-max-depth": [
+        2,
+        4,
+        8,
+        16,
+        32
+    ],
+    "instcombine-simplify-vector-elts-depth": [
+        2,
+        4,
+        8,
+        16,
+        32
+    ],
+    "intra-scc-cost-multiplier": [
+        0,
+        1,
+        2,
+        5,
+        10,
+        50
+    ],
+    "irce-loop-size-cutoff": [
+        0,
+        1,
+        2,
+        4,
+        8,
+        16
+    ],
+    "iterative-bfi-max-iterations-per-block": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "jump-inst-cost": [
+        0,
+        1,
+        2,
+        5,
+        10,
+        50
+    ],
+    "jump-table-to-switch-function-size-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "jump-table-to-switch-size-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "jump-threading-implication-search-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "jump-threading-phi-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "jump-threading-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "large-interval-freq-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "large-interval-size-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "late-remat-update-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "lcr-max-depth": [
+        2,
+        4,
+        8,
+        16,
+        32
+    ],
+    "lcr-max-interf": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "ldstmemcpy-glue-max": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "licm-max-num-fp-reassociations": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "licm-max-num-int-reassociations": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "licm-max-num-uses-traversed": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "licm-mssa-max-acc-promotion": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "licm-versioning-max-depth-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "limit-float-precision": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "locally-hot-callsite-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "loop-flatten-cost-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "loop-fusion-peel-max-count": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "loop-interchange-max-loop-nest-depth": [
+        2,
+        4,
+        8,
+        16,
+        32
+    ],
+    "loop-interchange-max-meminstr-count": [
+        100,
+        500,
+        1000,
+        5000
+    ],
+    "loop-interchange-min-loop-nest-depth": [
+        2,
+        4,
+        8,
+        16,
+        32
+    ],
+    "loop-interchange-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "lsr-complexity-limit": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "lsr-setupcost-depth-limit": [
+        2,
+        4,
+        8,
+        16,
+        32
+    ],
+    "m68k-ssection-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "machine-combiner-inc-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "machine-sink-cycle-limit": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "machine-sink-load-blocks-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "machine-sink-load-instrs-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "machine-sink-split-probability-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "max-bb-size-for-load-store-widening": [
+        100,
+        500,
+        1000,
+        5000
+    ],
+    "max-booleans-in-control-flow-hub": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "max-bytes-for-alignment": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "max-counter-promotions": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "max-counter-promotions-per-loop": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "max-dependences": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "max-forked-scev-depth": [
+        2,
+        4,
+        8,
+        16,
+        32
+    ],
+    "max-heap-to-stack-size": [
+        100,
+        500,
+        1000,
+        5000
+    ],
+    "max-hsdr": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "max-interleave-group-factor": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "max-jump-table-size": [
+        100,
+        500,
+        1000,
+        5000
+    ],
+    "max-loads-per-memcmp": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "max-loads-per-memcmp-opt-size": [
+        100,
+        500,
+        1000,
+        5000
+    ],
+    "max-nested-scalar-reduction-interleave": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "max-num-inline-blocks": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "max-num-inst-between-tfr-and-nv-store": [
+        100,
+        500,
+        1000,
+        5000
+    ],
+    "max-partial-inlining": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "max-phi-entries-increase-after-removing-empty-block": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "max-prefetch-iters-ahead": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "max-registers-for-gc-values": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "max-sched-reorder": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "max-speculation-depth": [
+        2,
+        4,
+        8,
+        16,
+        32
+    ],
+    "max-store-memcpy": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "max-store-memcpy-Os": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "max-store-memmove": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "max-store-memmove-Os": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "max-store-memset": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "max-store-memset-Os": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "max-switch-cases-per-result": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "max-uses-for-sinking": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "medium-basic-block-instruction-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "memchr-inline-threshold": [
+        50,
+        150,
+        225,
+        325,
+        500,
+        1000
+    ],
+    "memdep-block-number-limit": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "memdep-block-scan-limit": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "memop-max-annotations": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "memop-value-prof-max-opt-size": [
+        100,
+        500,
+        1000,
+        5000
+    ],
+    "memprof-cloning-cold-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "memprof-matching-cold-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "memprof-tail-call-search-depth": [
+        2,
+        4,
+        8,
+        16,
+        32
+    ],
+    "mfs-count-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "min-block-execution": [
+        0,
+        1,
+        2,
+        4,
+        8,
+        16
+    ],
+    "min-call-count-for-cg-matching": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "min-ctr-loop-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "min-func-count-for-cg-matching": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "min-jump-table-entries": [
+        0,
+        1,
+        2,
+        4,
+        8,
+        16
+    ],
+    "min-page-size": [
+        0,
+        1,
+        2,
+        4,
+        8,
+        16
+    ],
+    "min-prefetch-stride": [
+        0,
+        1,
+        2,
+        4,
+        8,
+        16
+    ],
+    "minimum-jump-tables": [
+        0,
+        1,
+        2,
+        4,
+        8,
+        16
+    ],
+    "mips-ssection-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "misched-limit": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "misched-verbose-level": [
+        0,
+        1,
+        2,
+        3
+    ],
+    "misfetch-cost": [
+        0,
+        1,
+        2,
+        5,
+        10,
+        50
+    ],
+    "mlregalloc-max-eviction-count": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "module-inliner-top-priority-threshold": [
+        50,
+        150,
+        225,
+        325,
+        500,
+        1000
+    ],
+    "move-auto-init-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "msan-instrumentation-with-call-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "mve-max-interleave-factor": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "non-global-value-max-name-size": [
+        100,
+        500,
+        1000,
+        5000
+    ],
+    "nvj-count": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "nvptx-fma-level": [
+        0,
+        1,
+        2,
+        3
+    ],
+    "nvptx-traverse-address-aliasing-limit": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "object-size-offset-visitor-max-visit-instructions": [
+        100,
+        500,
+        1000,
+        5000
+    ],
+    "openmp-opt-max-iterations": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "openmp-opt-shared-limit": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "opt-bisect-limit": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "optsize-jump-table-density": [
+        0,
+        1,
+        2,
+        4,
+        8,
+        16
+    ],
+    "outliner-benefit-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "partial-unrolling-threshold": [
+        50,
+        100,
+        150,
+        300,
+        500
+    ],
+    "pgo-critical-edge-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "pgo-function-size-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "pgo-memop-count-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "pgo-memop-max-version": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "pgo-memop-percent-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "phi-node-folding-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "phicse-num-phi-smallsize": [
+        0,
+        1,
+        2,
+        4,
+        8,
+        16
+    ],
+    "pipeliner-force-issue-width": [
+        0,
+        1,
+        2,
+        4,
+        8,
+        16
+    ],
+    "pipeliner-max-mii": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "pipeliner-max-stages": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "post-index-use-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "ppc-aix-shared-lib-tls-model-opt-limit": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "ppc-chaincommon-max-vars": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "ppc-chaincommon-min-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "ppc-dispprep-min-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "ppc-dqprep-max-vars": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "ppc-dsprep-max-vars": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "ppc-formprep-max-vars": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "ppc-gather-alias-max-depth": [
+        2,
+        4,
+        8,
+        16,
+        32
+    ],
+    "ppc-global-merge-max-offset": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "ppc-max-crbit-spill-dist": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "ppc-min-jump-table-entries": [
+        0,
+        1,
+        2,
+        4,
+        8,
+        16
+    ],
+    "ppc-preinc-prep-max-vars": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "pragma-unroll-and-jam-threshold": [
+        50,
+        100,
+        150,
+        300,
+        500
+    ],
+    "pragma-unroll-full-max-iterations": [
+        2,
+        4,
+        8,
+        16,
+        32
+    ],
+    "pragma-unroll-threshold": [
+        50,
+        100,
+        150,
+        300,
+        500
+    ],
+    "predictable-branch-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "preinline-threshold": [
+        50,
+        150,
+        225,
+        325,
+        500,
+        1000
+    ],
+    "procres-cost-lim": [
+        0,
+        1,
+        2,
+        5,
+        10,
+        50
+    ],
+    "profile-summary-huge-working-set-size-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "profile-summary-large-working-set-size-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "rdf-bb-limit": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "rdf-liveness-max-rec": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "recurrence-chain-limit": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "regalloc-eviction-max-interference-cutoff": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "rewrite-phi-limit": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "riscv-lower-ext-max-web-size": [
+        100,
+        500,
+        1000,
+        5000
+    ],
+    "riscv-lower-fpimm-cost": [
+        0,
+        1,
+        2,
+        5,
+        10,
+        50
+    ],
+    "riscv-max-build-ints-cost": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "riscv-min-jump-table-entries": [
+        0,
+        1,
+        2,
+        4,
+        8,
+        16
+    ],
+    "riscv-v-fixed-length-vector-lmul-max": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "riscv-v-register-bit-width-lmul": [
+        0,
+        1,
+        2,
+        4,
+        8,
+        16
+    ],
+    "riscv-v-slp-max-vf": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "riscv-v-vector-bits-max": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "riscv-v-vector-bits-min": [
+        0,
+        1,
+        2,
+        4,
+        8,
+        16
+    ],
+    "rotation-max-header-size": [
+        100,
+        500,
+        1000,
+        5000
+    ],
+    "salvage-stale-profile-max-callsites": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "sample-profile-cold-inline-threshold": [
+        50,
+        150,
+        225,
+        325,
+        500,
+        1000
+    ],
+    "sample-profile-hot-inline-threshold": [
+        50,
+        150,
+        225,
+        325,
+        500,
+        1000
+    ],
+    "sample-profile-icp-max-prom": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "sample-profile-inline-growth-limit": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "sample-profile-inline-limit-max": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "sample-profile-inline-limit-min": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "sample-profile-max-propagate-iterations": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "sample-profile-profi-cost-block-dec": [
+        0,
+        1,
+        2,
+        5,
+        10,
+        50
+    ],
+    "sample-profile-profi-cost-block-entry-dec": [
+        0,
+        1,
+        2,
+        5,
+        10,
+        50
+    ],
+    "sample-profile-profi-cost-block-entry-inc": [
+        0,
+        1,
+        2,
+        5,
+        10,
+        50
+    ],
+    "sample-profile-profi-cost-block-inc": [
+        0,
+        1,
+        2,
+        5,
+        10,
+        50
+    ],
+    "sample-profile-profi-cost-block-unknown-inc": [
+        0,
+        1,
+        2,
+        5,
+        10,
+        50
+    ],
+    "sample-profile-profi-cost-block-zero-inc": [
+        0,
+        1,
+        2,
+        5,
+        10,
+        50
+    ],
+    "sanitizer-coverage-level": [
+        0,
+        1,
+        2,
+        3
+    ],
+    "sbvec-seed-bundle-size-limit": [
+        100,
+        500,
+        1000,
+        5000
+    ],
+    "sbvec-seed-groups-limit": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "scalar-evolution-huge-expr-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "scalar-evolution-max-add-rec-size": [
+        100,
+        500,
+        1000,
+        5000
+    ],
+    "scalar-evolution-max-arith-depth": [
+        2,
+        4,
+        8,
+        16,
+        32
+    ],
+    "scalar-evolution-max-cast-depth": [
+        2,
+        4,
+        8,
+        16,
+        32
+    ],
+    "scalar-evolution-max-constant-evolving-depth": [
+        2,
+        4,
+        8,
+        16,
+        32
+    ],
+    "scalar-evolution-max-loop-guard-collection-depth": [
+        2,
+        4,
+        8,
+        16,
+        32
+    ],
+    "scalar-evolution-max-scc-analysis-depth": [
+        2,
+        4,
+        8,
+        16,
+        32
+    ],
+    "scalar-evolution-max-scev-compare-depth": [
+        2,
+        4,
+        8,
+        16,
+        32
+    ],
+    "scalar-evolution-max-scev-operations-implication-depth": [
+        2,
+        4,
+        8,
+        16,
+        32
+    ],
+    "scalar-evolution-max-value-compare-depth": [
+        2,
+        4,
+        8,
+        16,
+        32
+    ],
+    "scev-addops-inline-threshold": [
+        50,
+        150,
+        225,
+        325,
+        500,
+        1000
+    ],
+    "scev-mulops-inline-threshold": [
+        50,
+        150,
+        225,
+        325,
+        500,
+        1000
+    ],
+    "scev-range-iter-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "select-opti-loop-cycle-gain-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "select-opti-loop-gradient-gain-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "select-opti-loop-relative-gain-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "shrink-frame-limit": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "simple-loop-unswitch-inject-invariant-condition-hotness-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "simple-loop-unswitch-memoryssa-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "simplifycfg-branch-fold-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "simplifycfg-hoist-common-skip-limit": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "simplifycfg-max-small-block-size": [
+        100,
+        500,
+        1000,
+        5000
+    ],
+    "sink-freq-percent-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "slp-max-look-ahead-depth": [
+        2,
+        4,
+        8,
+        16,
+        32
+    ],
+    "slp-max-reg-size": [
+        100,
+        500,
+        1000,
+        5000
+    ],
+    "slp-max-root-look-ahead-depth": [
+        2,
+        4,
+        8,
+        16,
+        32
+    ],
+    "slp-max-stride": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "slp-max-vf": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "slp-min-reg-size": [
+        0,
+        1,
+        2,
+        4,
+        8,
+        16
+    ],
+    "slp-min-strided-loads": [
+        0,
+        1,
+        2,
+        4,
+        8,
+        16
+    ],
+    "slp-min-tree-size": [
+        0,
+        1,
+        2,
+        4,
+        8,
+        16
+    ],
+    "slp-recursion-max-depth": [
+        2,
+        4,
+        8,
+        16,
+        32
+    ],
+    "slp-threshold": [
+        -10,
+        0,
+        10,
+        20
+    ],
+    "small-loop-cost": [
+        0,
+        1,
+        2,
+        5,
+        10,
+        50
+    ],
+    "spec-exec-max-not-hoisted": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "spec-exec-max-speculation-cost": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "speculative-counter-promotion-max-exiting": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "spill-func-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "spill-func-threshold-Os": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "split-threshold-for-reg-with-hint": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "spp-counted-loop-trip-width": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "spp-rematerialization-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "ssc-dce-limit": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "stack-safety-max-iterations": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "stack-tagging-merge-init-scan-limit": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "stack-tagging-merge-init-size-limit": [
+        100,
+        500,
+        1000,
+        5000
+    ],
+    "strncmp-inline-threshold": [
+        50,
+        150,
+        225,
+        325,
+        500,
+        1000
+    ],
+    "sve-tail-folding-insn-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "switch-peel-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "t2-reduce-limit": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "t2-reduce-limit2": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "t2-reduce-limit3": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "tail-dup-indirect-size": [
+        0,
+        1,
+        2,
+        4,
+        8,
+        16
+    ],
+    "tail-dup-limit": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "tail-dup-placement-aggressive-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "tail-dup-placement-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "tail-dup-pred-size": [
+        0,
+        1,
+        2,
+        4,
+        8,
+        16
+    ],
+    "tail-dup-profile-percent-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "tail-dup-size": [
+        0,
+        1,
+        2,
+        4,
+        8,
+        16
+    ],
+    "tail-dup-succ-size": [
+        0,
+        1,
+        2,
+        4,
+        8,
+        16
+    ],
+    "tail-merge-size": [
+        0,
+        1,
+        2,
+        4,
+        8,
+        16
+    ],
+    "tail-merge-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "temporal-reuse-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "tls-size": [
+        0,
+        1,
+        2,
+        4,
+        8,
+        16
+    ],
+    "triangle-chain-count": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "two-entry-phi-node-folding-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "unroll-and-jam-count": [
+        2,
+        4,
+        8,
+        16,
+        32
+    ],
+    "unroll-and-jam-threshold": [
+        50,
+        100,
+        150,
+        300,
+        500
+    ],
+    "unroll-count": [
+        0,
+        2,
+        4,
+        8,
+        16
+    ],
+    "unroll-force-peel-count": [
+        2,
+        4,
+        8,
+        16,
+        32
+    ],
+    "unroll-full-max-count": [
+        2,
+        4,
+        8,
+        16,
+        32
+    ],
+    "unroll-max-count": [
+        2,
+        4,
+        8,
+        16,
+        32
+    ],
+    "unroll-max-iteration-count-to-analyze": [
+        2,
+        4,
+        8,
+        16,
+        32
+    ],
+    "unroll-max-percent-threshold-boost": [
+        50,
+        100,
+        150,
+        300,
+        500
+    ],
+    "unroll-max-upperbound": [
+        2,
+        4,
+        8,
+        16,
+        32
+    ],
+    "unroll-optsize-threshold": [
+        50,
+        100,
+        150,
+        300,
+        500
+    ],
+    "unroll-partial-threshold": [
+        50,
+        100,
+        150,
+        300,
+        500
+    ],
+    "unroll-peel-count": [
+        2,
+        4,
+        8,
+        16,
+        32
+    ],
+    "unroll-peel-max-count": [
+        2,
+        4,
+        8,
+        16,
+        32
+    ],
+    "unroll-threshold": [
+        100,
+        150,
+        300,
+        600
+    ],
+    "unroll-threshold-aggressive": [
+        50,
+        100,
+        150,
+        300,
+        500
+    ],
+    "unroll-threshold-default": [
+        50,
+        100,
+        150,
+        300,
+        500
+    ],
+    "unswitch-siblings-toplevel-div": [
+        0,
+        1,
+        2,
+        3
+    ],
+    "unswitch-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "vector-combine-max-scan-instrs": [
+        100,
+        500,
+        1000,
+        5000
+    ],
+    "vectorizer-min-trip-count": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "wholeprogramdevirt-branch-funnel-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "window-diff-limit": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "window-ii-limit": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "window-region-limit": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ],
+    "x86-br-merging-base-cost": [
+        0,
+        1,
+        2,
+        5,
+        10,
+        50
+    ],
+    "x86-cmov-converter-threshold": [
+        10,
+        50,
+        100,
+        200,
+        500
+    ],
+    "x86-pad-max-prefix-size": [
+        100,
+        500,
+        1000,
+        5000
+    ],
+    "x86-sfb-inspection-limit": [
+        2,
+        5,
+        10,
+        20,
+        50
+    ]
+}

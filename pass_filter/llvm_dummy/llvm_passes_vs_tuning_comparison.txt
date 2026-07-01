@@ -1,0 +1,99 @@
+=== Comparison: LLVM Standard Passes vs Tuning Arguments ===
+
+1. Tunable Passes (5)
+   (Standard Passes that have at least one related tuning argument)
+   [Pass: block-placement]
+     -> ext-tsp-block-placement-max-blocks
+
+   [Pass: dce]
+     -> ssc-dce-limit
+
+   [Pass: dse]
+     -> dse-memoryssa-defs-per-block-limit
+     -> dse-memoryssa-otherbb-cost
+     -> dse-memoryssa-partial-store-limit
+     -> dse-memoryssa-samebb-cost
+     -> dse-memoryssa-scanlimit
+     -> dse-memoryssa-walklimit
+     -> expand-condsets-coa-limit
+     -> expand-condsets-tfr-limit
+
+   [Pass: licm]
+     -> licm-max-num-fp-reassociations
+     -> licm-max-num-int-reassociations
+     -> licm-max-num-uses-traversed
+     -> licm-mssa-max-acc-promotion
+     -> licm-versioning-max-depth-threshold
+
+   [Pass: simple-loop-unswitch]
+     -> simple-loop-unswitch-inject-invariant-condition-hotness-threshold
+     -> simple-loop-unswitch-memoryssa-threshold
+
+2. Passes without Obvious Tuning Knobs (66)
+   (No tuning argument found containing the pass name directly)
+   - adce
+   - aggressive-instcombine组合表达模式
+   - always-inlinealways_inline函数内联
+   - argpromotion将“按引用传递”的参数提升为标量
+   - basiccg基本调用图构建
+   - break-crit-edges
+   - codegenprepare优化代码生成
+   - constmerge合并重复的全局常量
+   - deadargelim
+   - deadarghaX0r
+   - domfrontier
+   - domtree
+   - extract-blocks从模块中提取基本块（用于
+   - function(print)将函数输出打印到标准错误输出
+   - function-attrs推断函数属性
+   - globaldce
+   - globalopt全局变量优化器
+   - gvn全局值编号
+   - indvars规范化归纳变量
+   - inline功能集成/内联
+   - instcombine合并冗余指令
+   - instcount统计各种类型的Instructions
+   - instnamer为匿名指令分配名称
+   - internalize
+   - ipsccp
+   - iv-users
+   - jump-threading跳转线程
+   - kernel-infoGPU内核信息
+   - lcssa
+   - lint静态检查
+   - loop-deletion删除死循环
+   - loop-extract将循环提取到新函数中
+   - loop-reduce
+   - loop-rotate旋转循环
+   - loop-simplify规范化自然循环
+   - loop-unroll-and-jam展开和循环
+   - loop-unroll展开循环
+   - loops自然循环信息
+   - lower-atomic降低原子固有属性至非原子形式
+   - lower-global-dtors
+   - lower-invoke降低调用次数，以用于无回溯代码生成器
+   - lower-switch
+   - mem2reg
+   - memcpyopt
+   - mergefunc合并函数
+   - mergereturn统一函数出口节点
+   - module(print)将模块打印到标准错误输出
+   - normalize将
+   - partial-inliner
+   - postdomtree
+   - reassociate重新关联表达式
+   - reg2mem将所有值降级为堆叠槽
+   - regions检测单入口单出口区域
+   - rel-lookup-table-converter相对查找表转换器
+   - sccp稀疏条件常数传播
+   - simplifycfg简化
+   - sink代码沉没
+   - sroa
+   - strip
+   - strip-dead-debug-info
+   - strip-dead-prototypes
+   - strip-nondebug从模块中移除除dbg符号之外的所有符号
+   - tailcallelim尾部呼叫消除
+   - transform-warning
+   - verify模块验证器
+   - 公用通行证

@@ -1,0 +1,38 @@
+使用 llvm_dummy 项目验证 configs/llvm_args_probed_unsupported.txt 中条目
+总数: 34, 仍失败: 33, 意外成功: 1
+仍然失败的选项:
+-disable-args-min-alignment
+-disable-avoid-SFB
+-disable-avoid-speculation
+-disable-barrier-elimination
+-disable-checks
+-disable-clustered-low-occupancy-reschedule
+-disable-cost-per-use
+-disable-cvt-to-d-suffix
+-disable-deglobalization
+-disable-delinearization-checks
+-disable-explicit-locals
+-disable-fix-irreducible-control-flow-pass
+-disable-folding
+-disable-frm-insert-opt
+-disable-hoisting-to-hotter-blocks
+-disable-internalization
+-disable-loop-alignment
+-disable-multivector-spill-fill
+-disable-non-volatile-cr
+-disable-omit-dls
+-disable-perfect-shuffle
+-disable-regalloc-hints
+-disable-regalloc-hints-for-ndd
+-disable-rule
+-disable-serialize-icmp
+-disable-sextw-removal
+-disable-spmdization
+-disable-state-machine-rewrite
+-disable-strip-w-suffix
+-disable-tailpred
+-disable-unclustered-high-rp-reschedule
+-disable-using-constant-pool-for-large-ints
+-disable-vector-mask-mutation
+在 dummy 项目下意外成功的选项:
+-disable-cleanups

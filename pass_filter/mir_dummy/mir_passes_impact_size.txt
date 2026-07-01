@@ -1,0 +1,17 @@
+MIR Size-Only Passes
+AbortUnwindingCalls
+CleanupPostBorrowck
+DeadStoreElimination-final
+DeadStoreElimination-initial
+Derefer
+EnumSizeOpt
+EraseDerefTemps
+PromoteTemps
+RemovePlaceMention
+RemoveUnneededDrops
+RemoveZsts
+SimplifyLocals-after-value-numbering
+SimplifyLocals-before-const-prop
+SimplifyLocals-final
+SingleUseConsts
+UnreachableEnumBranching
