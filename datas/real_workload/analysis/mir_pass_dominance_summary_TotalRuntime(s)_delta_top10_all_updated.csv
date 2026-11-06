@@ -1,0 +1,13 @@
+workload,top_mir_pass,top_mir_share,other_share
+tokio,Inline,0.062357,0.542857
+regex,UnreachableEnumBranching,0.061237,0.524208
+quinn,DataflowConstProp,0.237410,0.499906
+aho-corasick,JumpThreading,0.119313,0.494701
+ripgrep,ForceInline,0.092490,0.494478
+rustls,UnreachableEnumBranching,0.070371,0.485018
+eza,UnreachablePropagation,0.146288,0.466116
+hyper,MatchBranchSimplification,0.133915,0.453338
+bat,Inline,0.291556,0.446911
+image,UnreachablePropagation,0.076184,0.429623
+serde,JumpThreading,0.063161,0.418857
+fast_image_resize,MatchBranchSimplification,0.101854,0.364774

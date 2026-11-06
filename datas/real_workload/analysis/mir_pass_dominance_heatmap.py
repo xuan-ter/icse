@@ -362,7 +362,7 @@ def main() -> None:
     ap.add_argument("--out-dir", default=r"d:\MIR_LLVM_NEW\datas\real_workload\analysis")
     ap.add_argument("--metric-col", default="TotalRuntime(s)")
     ap.add_argument("--strength", choices=["delta", "rel"], default="delta")
-    ap.add_argument("--top-k", type=int, default=10)
+    ap.add_argument("--top-k", type=int, default=8)
     ap.add_argument("--annot-threshold", type=float, default=0.0)
     ap.add_argument("--title", default="MIR-pass dominance across workloads")
     ap.add_argument("--font-scale", type=float, default=1.0)

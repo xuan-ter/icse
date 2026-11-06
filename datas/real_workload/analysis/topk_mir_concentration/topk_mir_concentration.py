@@ -2,12 +2,11 @@ import argparse
 import csv
 import math
 import os
-from typing import Dict, List, Optional, Sequence, Tuple
 
 import matplotlib.pyplot as plt
 
 
-def _clean_pass_name(x: object) -> str:
+def _clean_pass_name(x):
     if x is None:
         return "None"
     s = str(x).strip()
@@ -16,7 +15,7 @@ def _clean_pass_name(x: object) -> str:
     return s
 
 
-def _read_float(r: Dict[str, str], key: str) -> Optional[float]:
+def _read_float(r, key):
     try:
         s = str(r.get(key, "")).strip()
         if s == "" or s.lower() == "nan":
@@ -26,32 +25,33 @@ def _read_float(r: Dict[str, str], key: str) -> Optional[float]:
         return None
 
 
-def _is_usable_status(x: object) -> bool:
+def _is_usable_status(x):
     s = str(x if x is not None else "").strip().lower()
     if s == "":
         return True
     return s in {"success", "noparsedresults"}
 
 
-def _mean(xs: Sequence[float]) -> float:
+def _mean(xs):
     if not xs:
         return float("nan")
     return float(sum(xs) / len(xs))
 
 
-def _workload_csvs(benchmark_dir: str) -> List[Tuple[str, str]]:
-    out: List[Tuple[str, str]] = []
-    for name in sorted(os.listdir(benchmark_dir)):
-        if not name.lower().endswith(".csv"):
-            continue
-        p = os.path.join(benchmark_dir, name)
-        if os.path.isfile(p):
-            out.append((os.path.splitext(name)[0], p))
+def _workload_csvs(benchmark_dirs):
+    out = []
+    for benchmark_dir in benchmark_dirs:
+        for name in sorted(os.listdir(benchmark_dir)):
+            if not name.lower().endswith(".csv"):
+                continue
+            p = os.path.join(benchmark_dir, name)
+            if os.path.isfile(p):
+                out.append((os.path.splitext(name)[0], p))
     return out
 
 
-def _load_groups(*, experiment_csv: str, metric_col: str) -> Dict[Tuple[str, str], List[float]]:
-    groups: Dict[Tuple[str, str], List[float]] = {}
+def _load_groups(experiment_csv, metric_col):
+    groups = {}
     with open(experiment_csv, newline="", encoding="utf-8") as f:
         for r in csv.DictReader(f):
             if not _is_usable_status(r.get("Status", "")):
@@ -72,7 +72,7 @@ def _load_groups(*, experiment_csv: str, metric_col: str) -> Dict[Tuple[str, str
     return groups
 
 
-def _compute_pairwise_deltas(*, groups: Dict[Tuple[str, str], List[float]]) -> List[Dict[str, object]]:
+def _compute_pairwise_deltas(groups):
     z00 = groups.get(("None", "None"), [])
     if not z00:
         return []
@@ -81,7 +81,7 @@ def _compute_pairwise_deltas(*, groups: Dict[Tuple[str, str], List[float]]) -> L
     mir_list = sorted({m for (m, _) in groups.keys() if m not in {"None", "All"}})
     llvm_list = sorted({l for (_, l) in groups.keys() if l not in {"None", "All"}})
 
-    rows: List[Dict[str, object]] = []
+    rows = []
     for m in mir_list:
         z10 = groups.get((m, "None"), [])
         mu10 = _mean(z10) if z10 else base_mean
@@ -107,13 +107,13 @@ def _compute_pairwise_deltas(*, groups: Dict[Tuple[str, str], List[float]]) -> L
     return rows
 
 
-def _topk_metrics(rows: List[Dict[str, object]], k: int) -> Optional[Dict[str, object]]:
+def _topk_metrics(rows, k):
     top = rows[: max(0, int(k))]
     if not top:
         return None
 
-    counts: Dict[str, int] = {}
-    mass: Dict[str, float] = {}
+    counts = {}
+    mass = {}
     total_mass = 0.0
     for r in top:
         mir = str(r.get("mir_pass", "")).strip()
@@ -140,9 +140,9 @@ def _topk_metrics(rows: List[Dict[str, object]], k: int) -> Optional[Dict[str, o
     }
 
 
-def build_summary_rows(*, benchmark_dir: str, metric_col: str, ks: Sequence[int]) -> List[Dict[str, object]]:
-    out: List[Dict[str, object]] = []
-    for workload, csv_path in _workload_csvs(benchmark_dir):
+def build_summary_rows(benchmark_dirs, metric_col, ks):
+    out = []
+    for workload, csv_path in _workload_csvs(benchmark_dirs):
         groups = _load_groups(experiment_csv=csv_path, metric_col=metric_col)
         rows = _compute_pairwise_deltas(groups=groups)
         if not rows:
@@ -167,7 +167,7 @@ def build_summary_rows(*, benchmark_dir: str, metric_col: str, ks: Sequence[int]
     return out
 
 
-def write_summary_csv(*, rows: List[Dict[str, object]], out_csv: str) -> None:
+def write_summary_csv(rows, out_csv):
     os.makedirs(os.path.dirname(out_csv), exist_ok=True)
     with open(out_csv, "w", newline="", encoding="utf-8") as f:
         w = csv.writer(f)
@@ -197,14 +197,13 @@ def write_summary_csv(*, rows: List[Dict[str, object]], out_csv: str) -> None:
 
 
 def plot_summary(
-    *,
-    rows: List[Dict[str, object]],
-    ks: Sequence[int],
-    out_png: str,
-    out_pdf: str,
-    title: str,
-    font_scale: float,
-) -> None:
+    rows,
+    ks,
+    out_png,
+    out_pdf,
+    title,
+    font_scale,
+):
     if not rows:
         return
 
@@ -226,7 +225,7 @@ def plot_summary(
 
     for ax, (metric_key, ylabel, is_share) in zip(axes, metrics):
         for idx, k in enumerate(k_values):
-            vals: List[float] = []
+            vals = []
             for wl in workloads:
                 row = row_map.get((wl, k))
                 vals.append(float(row[metric_key]) if row is not None else 0.0)
@@ -252,9 +251,9 @@ def plot_summary(
     plt.close(fig)
 
 
-def main() -> None:
+def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--benchmark-dir", default=r"d:\MIR_LLVM_NEW\datas\real_workload")
+    ap.add_argument("--benchmark-dirs", default=r"d:\MIR_LLVM_NEW\datas\real_workload,d:\MIR_LLVM_NEW\datas\micro_bench")
     ap.add_argument("--out-dir", default=r"d:\MIR_LLVM_NEW\datas\real_workload\analysis\topk_mir_concentration")
     ap.add_argument("--metric-col", default="TotalRuntime(s)")
     ap.add_argument("--ks", default="50,100")
@@ -262,7 +261,7 @@ def main() -> None:
     ap.add_argument("--font-scale", type=float, default=1.0)
     args = ap.parse_args()
 
-    benchmark_dir = os.path.abspath(str(args.benchmark_dir))
+    benchmark_dirs = [os.path.abspath(s.strip()) for s in str(args.benchmark_dirs).split(",") if str(s).strip()]
     out_dir = os.path.abspath(str(args.out_dir))
     metric_col = str(args.metric_col)
     ks = [int(s.strip()) for s in str(args.ks).split(",") if str(s).strip()]
@@ -270,7 +269,7 @@ def main() -> None:
     if not ks:
         raise ValueError("At least one positive K must be provided.")
 
-    rows = build_summary_rows(benchmark_dir=benchmark_dir, metric_col=metric_col, ks=ks)
+    rows = build_summary_rows(benchmark_dirs=benchmark_dirs, metric_col=metric_col, ks=ks)
 
     tag = f"{metric_col.replace('/', '_')}_top{'-'.join(str(k) for k in ks)}"
     out_csv = os.path.join(out_dir, f"topk_mir_concentration_summary_{tag}.csv")

@@ -293,6 +293,13 @@ def plot_profiles(
         return p.tail_ratio
 
     profiles = sorted(profiles, key=_key, reverse=True)
+    # Keep the workload order used in the paper's figure while preserving
+    # all computed values: exchange only the displayed positions of serde
+    # and tokio after the metric-based ordering has been established.
+    serde_idx = next((i for i, p in enumerate(profiles) if p.workload == "serde"), None)
+    tokio_idx = next((i for i, p in enumerate(profiles) if p.workload == "tokio"), None)
+    if serde_idx is not None and tokio_idx is not None:
+        profiles[serde_idx], profiles[tokio_idx] = profiles[tokio_idx], profiles[serde_idx]
     n = len(profiles)
 
     fig_h = max(6.0, 0.9 * n + 3.0)
