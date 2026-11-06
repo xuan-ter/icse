@@ -77,6 +77,44 @@ The main project directories currently covered by this workflow are:
 - `tokio`
 - `trait_test`
 
+### 2.1 Pass List and Experiment Matrix
+
+The `pass_filter` directory contains the pass list and machine-readable experiment matrix used in this experiment:
+
+- `pass_filter\pass.txt`: A human-readable list of the 20 MIR passes and 83 LLVM passes selected for the experiment, together with their disable switches. MIR passes use switches in the form `-PassName`; LLVM passes use `-disable-pass-name`.
+- `pass_filter\combined_experiment_matrix.json`: The machine-readable matrix stored under `pass_filter`. Its top-level fields are `description` and `combinations`. Each combination has `name`, `description`, `mir`, and `llvm` fields; the `mir` and `llvm` objects contain pass names, `switches`, and `parameters`.
+
+`pass_filter\combined_experiment_matrix.json` contains 1,765 combinations:
+
+- 20 single-factor MIR ablation combinations;
+- 83 single-factor LLVM ablation combinations;
+- 1 `EXP_DBL_000_BASELINE` baseline combination;
+- 1,660 MIR×LLVM two-factor combinations (20 × 83);
+- 1 special `EXP_001_DISABLE_ALL` combination that disables all LLVM controls.
+
+Use `pass_filter\pass.txt` to check pass names and switches. Note that `pass_filter\combined_experiment_matrix.json` and `table\table_json\combined_experiment_matrix.json` are different files: the former has 1,765 entries, while the latter has 1,766 and includes the additional `EXP_000_ALL_OFF` entry. Many project scripts currently default to the file under `table\table_json`, but the actual input is determined by the target script's `DEFAULT_JSON_PATH` or command-line arguments. The paper reports 1,766 configurations, matching the count in the `table\table_json` file. Record the actual matrix path and its SHA-256 hash for every run, then check results against the configuration names in that file. Do not treat the two matrix sizes as interchangeable.
+
+### 2.2 The 12 Real-World Projects and Their Versions
+
+The 12 real-world Rust workloads listed in Table II of the paper correspond to project directories in the current workspace. The package versions below are the main package versions resolved from each project's root Cargo workspace using `cargo metadata --locked --offline --no-deps`; they can be verified against the current experiment copy. The paper says that its artifact also records benchmark revisions, but Git metadata is not preserved for every project in the current workspace, so missing commit IDs are not inferred.
+
+| Paper project | Main Cargo package | Package version in experiment copy | Source revision in current copy | Latest GitHub release/tag (checked 2026-11-06) | Local verification location |
+| --- | --- | --- | --- | --- | --- |
+| image | image | 0.25.9 | f83dfb3ae63398fc2807eddde86c9fb3f6775d86 (`v0.25.9-756-gf83dfb3a`) | — (use previously recorded local commit) | `image\Cargo.toml`, `image\.git_embedded_backup` |
+| fast_image_resize | fast_image_resize | 6.0.0 | a563fb6226009171143d81d250db4a823a034895 (`v6.0.0`) | — (use previously recorded local commit) | `fast_image_resize\Cargo.toml`, `fast_image_resize\.git_embedded_backup` |
+| ripgrep | ripgrep | 15.1.0 | No Git revision retained in current copy | [15.2.0 release](https://github.com/BurntSushi/ripgrep/releases/tag/15.2.0) | `ripgrep\Cargo.toml`, `ripgrep\Cargo.lock` |
+| bat | bat | 0.26.1 | No Git revision retained in current copy | [v0.26.1 release](https://github.com/sharkdp/bat/releases/tag/v0.26.1) | `bat\Cargo.toml`, `bat\Cargo.lock` |
+| eza | eza | 0.23.4 | No Git revision retained in current copy | [v0.23.5 release](https://github.com/eza-community/eza/releases/tag/v0.23.5) | `eza\Cargo.toml`, `eza\Cargo.lock` |
+| serde | serde | 1.0.228 | 1023d077510b4aef36a41ef56fdb7798568a2654 (`v1.0.228-35-g1023d077`) | — (use previously recorded local commit) | `serde\serde\Cargo.toml`, `serde\.git` |
+| aho-corasick | aho-corasick | 1.1.4 | c82178696b9ddc18b56c3c74853529e7926ff329 (`1.1.4-5-gc821786`) | — (use previously recorded local commit) | `aho-corasick\Cargo.toml`, `aho-corasick\.git_embedded_backup` |
+| regex | regex | 1.12.3 | No Git revision retained in current copy | [1.13.1 tag (regex package)](https://github.com/rust-lang/regex/tree/1.13.1) | `regex\Cargo.toml`, `regex\Cargo.lock` |
+| tokio | tokio | 1.50.0 | No Git revision retained in current copy | [tokio-1.54.1 release](https://github.com/tokio-rs/tokio/releases/tag/tokio-1.54.1) | `tokio\tokio\Cargo.toml`, `tokio\Cargo.lock` |
+| hyper | hyper | 1.8.1 | No Git revision retained in current copy | [v1.12.0 release](https://github.com/hyperium/hyper/releases/tag/v1.12.0) | `hyper\Cargo.toml`, `hyper\Cargo.lock` |
+| rustls | rustls | 0.24.0-dev.0 | ba04600d6cd85d7a162b07625d68e9c3f4364671 (local description: `ba04600`) | — (use previously recorded local commit) | `rustls\rustls\Cargo.toml`, `rustls\.git_embedded_backup` |
+| quinn | quinn | 0.12.0 | d9e31c65bea7b03ea5e92e0d5de248fa3b27f395 | — (use previously recorded local commit) | `quinn\Cargo.toml`, `quinn\.git_embedded_backup` |
+
+The package versions and source revisions above come from the local experiment directories. For the six projects whose local commits were retained, the previously recorded commit IDs are kept; the GitHub column does not replace them with newer upstream tags. For the other six projects, the latest version-related releases or tags visible as of 2026-11-06 are listed as requested. These upstream references are for comparison only and do not prove which tag was used for the paper's run. The lookup rule was to use the latest versioned release when the repository has releases, and otherwise the latest tag. The regex Releases page still marks 1.0.0 as Latest, so the table uses the latest tag for the `regex` package itself, 1.13.1, rather than confusing tags for the `regex-automata` or `regex-syntax` subpackages with the `regex` package version. The anonymous artifact page reports a source commit date of 2026-07-03; `image/Cargo.toml` indicates that the development branch is preparing 1.0.0, while the experiment package version remains 0.25.9. Upstream repositories: [image-rs/image](https://github.com/image-rs/image), [fast_image_resize](https://github.com/cykooz/fast_image_resize), [ripgrep](https://github.com/BurntSushi/ripgrep), [bat](https://github.com/sharkdp/bat), [eza](https://github.com/eza-community/eza), [serde](https://github.com/serde-rs/serde), [aho-corasick](https://github.com/BurntSushi/aho-corasick), [regex](https://github.com/rust-lang/regex), [tokio](https://github.com/tokio-rs/tokio), [hyper](https://github.com/hyperium/hyper), [rustls](https://github.com/rustls/rustls), and [quinn](https://github.com/quinn-rs/quinn). To reproduce the exact source used for the paper, retrieve the benchmark revisions recorded in the anonymous artifact referenced by the paper's Data Availability statement: https://anonymous.4open.science/r/icse-2BF2. Archive those revisions alongside package versions and commit IDs.
+
 
 ## 3. Environment
 
@@ -245,16 +283,18 @@ and
 
 This rule is implemented in project analysis scripts such as:
 
-- [analyze_interaction.py](file:///d:/MIR_LLVM_NEW/rustls/analysis/did/analyze_interaction.py#L134-L139)
+- [analyze_interaction.py](rustls/analysis/did/analyze_interaction.py)
 
 ### 6.4 Bootstrap settings
 
-The current project scripts use:
+Bootstrap settings are project-specific. The current Rustls analysis uses:
 
 ```text
-BOOTSTRAP_SAMPLES = 2000
+BOOTSTRAP_SAMPLES = 50000
 BOOTSTRAP_SEED = 42
 ```
+
+Check the settings in the target project's `analyze_interaction.py` before reproducing its results.
 
 ### 6.5 Example command: rustls
 
@@ -476,7 +516,6 @@ Some scripts were originally authored on Linux and may still contain `/root/...`
 
 A project may have large `delta` values and `CI` excluding zero, but still end up with `significant=False` everywhere because `p_adj >= 0.05` after BH correction across 1660 simultaneous tests.
 
-This is currently the case for `rustls`.
 
 
 ## 12. Recommended Reproduction Order
