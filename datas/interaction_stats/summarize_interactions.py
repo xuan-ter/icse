@@ -10,9 +10,9 @@ OUTPUT_DIR = ROOT / "datas" / "interaction_stats"
 OUTPUT_CSV = OUTPUT_DIR / "interaction_summary.csv"
 OUTPUT_CSV_ZH = OUTPUT_DIR / "interaction_summary_zh.csv"
 PREFERRED_RESULT_PATHS = {
-    # This analysis directory is generated from:
-    # d:\MIR_LLVM_NEW\serde\results_expanded\20260620_123353
-    "serde": ROOT / "serde" / "analysis_new" / "did" / "interaction_results.csv",
+    # This analysis directory is generated from the current updated serde run:
+    # d:\MIR_LLVM_NEW\serde\results\20260702_155545
+    "serde": ROOT / "serde" / "results" / "20260702_155545" / "analysis_new" / "did" / "interaction_results.csv",
     # This analysis directory is generated from:
     # d:\MIR_LLVM_NEW\fast_image_resize\results
     "fast_image_resize": ROOT / "fast_image_resize" / "analysis" / "did" / "interaction_results.csv",
