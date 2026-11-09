@@ -414,6 +414,27 @@ Before analysis, check that the raw experiment is complete:
 
 Only valid runs that pass these checks should enter DiD analysis. Save reruns or repaired results separately and document how they differ from the original results.
 
+### 8.5 Large-|Δ| Case Reproduction
+
+The paper's per-subject maximum-|Δ| cases are preserved in the [curated large-delta bundle](datas/large_delta/). It contains frozen inputs and the analysis needed to reproduce 18 evaluation subjects, with 1,660 planned pairwise comparisons per subject (29,880 interaction rows in total). BH adjustment is performed separately within each subject; the confidence intervals and q-values do not account for maximum-based selection, so these cases are exploratory.
+
+Run the statistical checks from the bundle directory:
+
+```powershell
+cd D:\MIR_LLVM_NEW\datas\large_delta
+python analyze_large_delta.py
+python -m unittest discover -s tests -v
+```
+
+The subject maxima, four-cell medians, and paper table are in `results\large_delta_summary\subject_max.csv`, `results\case_cell_medians.csv`, and `paper_revision_20261102\tables\big_delta.tex`. The two cases discussed in the paper are:
+
+- `ripgrep`: `ForceInline × -disable-cleanups`, Δ=`+0.5125`, 95% CI `[+0.4405,+0.5922]`, q=`6.28×10^-5`; medians `(00,10,01,11) = (9.715, 11.976, 12.565, 9.674)` seconds, `n=10` per cell.
+- `bat`: `ImpossiblePredicates × -disable-vp`, Δ=`-0.4237`, 95% CI `[-0.4687,-0.3620]`, q=`2.59×10^-4`; medians `(23.183, 23.285, 23.219, 36.365)` seconds, `n=10` per cell.
+
+Compiler summaries are under `datas\large_delta\evidence\representative_runs\run_20261023_full_graph\analysis\`, and sampled profiles are under `datas\large_delta\evidence\hot_paths_wsl_20261105\`. These are supplemental observations: the raw compiler `cases` are not included, the compiler capture uses a supplemental toolchain/source snapshot, and the stripped `bat` executable supports address-level profiling only. They support consistency checks but do not establish a causal mechanism for the historical runtime interaction.
+
+The saved compiler summaries report no corresponding cell-specific shared LLVM-IR or assembly-module changes for `ripgrep`. For `bat`, the shared-module changes relative to cell `00` are `21/165`, `19/165`, and `18/165` for cells `10`, `01`, and `11`, respectively, in both LLVM IR and assembly; the MIR summary counts are unchanged. The `bat_fast` profile captures contain approximately 1,000 samples per cell.
+
 ## 9. Step 4: Re-run Cross-Project Aggregation
 
 ### 9.1 Script Location
