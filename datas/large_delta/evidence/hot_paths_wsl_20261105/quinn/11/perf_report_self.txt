@@ -1,0 +1,31 @@
+# To display the perf.data header info, please use --header/--header-only options.
+#
+#
+# Total Lost Samples: 0
+#
+# Samples: 15  of event 'cycles:Pu'
+# Event count (approx.): 406617292
+#
+# Overhead  Shared Object     Symbol                  IPC   [IPC Coverage]
+# ........  ................  ......................  ....................
+#
+    13.65%  bulk              [.] 0x000000000030fbb3  -      -            
+    12.94%  bulk              [.] 0x0000000000355d5b  -      -            
+    12.08%  bulk              [.] 0x0000000000375530  -      -            
+    11.08%  bulk              [.] 0x00000000002fcced  -      -            
+    10.64%  bulk              [.] 0x000000000034d8a4  -      -            
+     8.40%  bulk              [.] 0x000000000034d9e9  -      -            
+     7.59%  bulk              [.] 0x000000000042f570  -      -            
+     5.03%  [vdso]            [.] 0x0000000000000aa5  -      -            
+     3.85%  libc.so.6         [.] 0x00000000001a0a29  -      -            
+     2.51%  bulk              [.] 0x00000000003437e6  -      -            
+     2.51%  bulk              [.] 0x00000000003438b1  -      -            
+     2.51%  bulk              [.] 0x000000000042f7c5  -      -            
+     2.45%  bulk              [.] 0x0000000000330c40  -      -            
+     2.45%  bulk              [.] 0x000000000035cc4e  -      -            
+     2.32%  bulk              [.] 0x00000000002f4a47  -      -            
+
+
+#
+# (Cannot load tips.txt file, please install perf!)
+#

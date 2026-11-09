@@ -1,0 +1,34 @@
+bulk     517   174.735683:    6668568 cycles:Pu: 
+
+bulk     518   174.739194:   10204081 cycles:Pu: 
+
+bulk     517   174.741785:    8292048 cycles:Pu: 
+
+bulk     518   174.743158:   10204081 cycles:Pu: 
+
+bulk     517   174.745012:    8292048 cycles:Pu: 
+
+bulk     518   174.751086:   19788728 cycles:Pu: 
+
+bulk     517   174.751878:   16650917 cycles:Pu: 
+
+bulk     517   174.765365:   33249071 cycles:Pu: 
+
+bulk     518   174.766874:   34722057 cycles:Pu: 
+
+bulk     517   174.782982:   44119774 cycles:Pu: 
+
+bulk     518   174.785064:   42750086 cycles:Pu: 
+
+bulk     518   174.801249:   44201849 cycles:Pu: 
+
+bulk     517   174.801431:   47300267 cycles:Pu: 
+
+bulk     518   174.819862:   50048221 cycles:Pu: 
+
+bulk     517   174.820346:   49441968 cycles:Pu: 
+
+bulk     517   174.839727:   51385900 cycles:Pu: 
+
+bulk     518   174.839772:   52069680 cycles:Pu: 
+

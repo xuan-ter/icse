@@ -1,0 +1,9 @@
+{
+  "captured_at_utc": "2026-10-23T17:35:44.839644+00:00",
+  "platform": "Windows-10-10.0.19045-SP0",
+  "machine": "AMD64",
+  "wsl_kernel": "Linux LAPTOP-J2V5NUK2 6.18.54.1-microsoft-standard-WSL2 #1 SMP PREEMPT_DYNAMIC Tue Oct  6 19:13:07 UTC 2026 x86_64 x86_64 x86_64 GNU/Linux",
+  "rustc_version_verbose": "rustc 1.92.0-nightly (54a8a1db6 2025-09-26)\nbinary: rustc\ncommit-hash: 54a8a1db604e4caff93e26e167ad4a6fde9f0681\ncommit-date: 2025-09-26\nhost: x86_64-unknown-linux-gnu\nrelease: 1.92.0-nightly\nLLVM version: 21.1.2",
+  "cargo_version": "cargo 1.92.0-nightly (f2932725b 2025-09-24)",
+  "historical_match": "NO: original logs identify rustc 1.98.0-nightly LLVM 22.1.6 Linux; available WSL nightly and local source snapshot do not match the per-run historical provenance."
+}

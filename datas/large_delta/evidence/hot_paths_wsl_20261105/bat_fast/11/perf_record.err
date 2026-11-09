@@ -1,0 +1,2 @@
+[ perf record: Woken up 32 times to write data ]
+[ perf record: Captured and wrote 8.335 MB /tmp/bat_fast_11.data (1032 samples) ]

@@ -1,0 +1,22 @@
+# Curated GitHub bundle: omit bulky raw compiler captures and generated oversized output.
+/evidence/representative_runs/run_20261023_full_graph/cases/
+/results/measurement_cell_mapping.csv
+
+# Reports embedding workstation-specific absolute paths.
+/results/case_artifact_paths.csv
+/results/case_runlog_audit.csv
+/results/representative_evidence_status.csv
+/evidence/representative_runs/run_20261023_full_graph/four_cell_build_results.csv
+/evidence/representative_runs/run_20261023_full_graph/run_summary.json
+
+# Original/full-local analysis files not part of the curated bundle.
+/SOURCE_README.md
+/analyze_compiler_evidence.py
+/build_hot_path_evidence_report.py
+/capture_full_graph_evidence.py
+/capture_representative_evidence.py
+/profile_bat_fast.sh
+/profile_hot_paths_wsl.sh
+/summarize_perf_hot_paths.py
+/summarize_perf_reports.py
+/symbolize_perf_hot_paths.py

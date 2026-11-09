@@ -1,0 +1,2 @@
+[ perf record: Woken up 3 times to write data ]
+[ perf record: Captured and wrote 0.979 MB /tmp/perf_ripgrep_00.data (121 samples) ]

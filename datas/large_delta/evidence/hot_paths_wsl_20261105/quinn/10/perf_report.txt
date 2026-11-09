@@ -1,0 +1,33 @@
+# To display the perf.data header info, please use --header/--header-only options.
+#
+#
+# Total Lost Samples: 0
+#
+# Samples: 17  of event 'cycles:Pu'
+# Event count (approx.): 529389344
+#
+# Children      Self  Shared Object     Symbol                  IPC   [IPC Coverage]
+# ........  ........  ................  ......................  ....................
+#
+     9.84%     9.84%  libc.so.6         [.] 0x00000000000a50e8  -      -            
+     9.71%     9.71%  bulk              [.] 0x000000000042f392  -      -            
+     9.45%     9.45%  libc.so.6         [.] 0x00000000000a27f8  -      -            
+     9.34%     9.34%  bulk              [.] 0x00000000002eb541  -      -            
+     8.93%     8.93%  bulk              [.] 0x000000000042fa80  -      -            
+     8.35%     8.35%  bulk              [.] 0x00000000002e5273  -      -            
+     8.33%     8.33%  bulk              [.] 0x00000000003163cb  -      -            
+     8.08%     8.08%  bulk              [.] 0x0000000000326a1a  -      -            
+     6.56%     6.56%  bulk              [.] 0x000000000036b390  -      -            
+     6.28%     6.28%  bulk              [.] 0x00000000003431d8  -      -            
+     3.74%     3.74%  bulk              [.] 0x00000000002d2885  -      -            
+     3.15%     3.15%  bulk              [.] 0x000000000034908e  -      -            
+     1.93%     1.93%  bulk              [.] 0x00000000002d2f44  -      -            
+     1.93%     1.93%  bulk              [.] 0x000000000030fa44  -      -            
+     1.57%     1.57%  bulk              [.] 0x000000000042fd22  -      -            
+     1.57%     1.57%  libc.so.6         [.] 0x00000000001a0a2e  -      -            
+     1.26%     1.26%  libc.so.6         [.] 0x00000000001a0a92  -      -            
+
+
+#
+# (Cannot load tips.txt file, please install perf!)
+#

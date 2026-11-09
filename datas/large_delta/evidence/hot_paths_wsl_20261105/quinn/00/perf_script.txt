@@ -1,0 +1,28 @@
+bulk     506   174.071649:   10204081 cycles:Pu: 
+
+bulk     505   174.072006:   10204081 cycles:Pu: 
+
+bulk     505   174.075555:    8976618 cycles:Pu: 
+
+bulk     506   174.075943:   11185441 cycles:Pu: 
+
+bulk     505   174.082469:   17259169 cycles:Pu: 
+
+bulk     506   174.083006:   16554231 cycles:Pu: 
+
+bulk     506   174.094427:   29712851 cycles:Pu: 
+
+bulk     505   174.095095:   33062750 cycles:Pu: 
+
+bulk     506   174.111606:   42184406 cycles:Pu: 
+
+bulk     505   174.112267:   45613349 cycles:Pu: 
+
+bulk     505   174.131475:   48806375 cycles:Pu: 
+
+bulk     506   174.133250:   45365905 cycles:Pu: 
+
+bulk     505   174.150798:   50358157 cycles:Pu: 
+
+bulk     506   174.152255:   49107358 cycles:Pu: 
+

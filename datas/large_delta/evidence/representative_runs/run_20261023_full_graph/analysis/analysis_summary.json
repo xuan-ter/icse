@@ -1,0 +1,7 @@
+{
+  "build_rows": 16,
+  "successful_builds": 16,
+  "successful_smokes": 16,
+  "structure_rows": 16,
+  "note": "No structural summary establishes causality; compiler artifacts are supplemental and provenance-mismatched unless compiler_environment.json says otherwise."
+}

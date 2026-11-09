@@ -1,0 +1,40 @@
+\begin{table*}[t]
+\centering
+\caption{Ten largest absolute estimates among the 18 per-subject maximum-$|\hat{\Delta}|$ MIR--LLVM pairs in the evaluation set.}
+\label{tab:subject_max_pairs}
+\footnotesize
+\setlength{\tabcolsep}{1.4pt}
+\renewcommand{\arraystretch}{1.18}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}lllp{4.5cm}rrr@{}}
+\hline
+\textbf{Subject} & \textbf{Type} & \textbf{MIR pass} & \textbf{LLVM control switch} & \textbf{$\hat{\Delta}$} & \textbf{95\% CI} & \textbf{BH $q$} \\
+\hline
+\texttt{ripgrep} & \texttt{Real} & \texttt{ForceInline} & \texttt{-disable-\allowbreak{}cleanups} & $+0.512$ & $[+0.441,+0.592]$ & $6.28$ \\
+
+\texttt{bat} & \texttt{Real} & \texttt{ImpossiblePredicates} & \texttt{-disable-\allowbreak{}vp} & $-0.424$ & $[-0.469,-0.362]$ & $25.94$ \\
+
+\texttt{quinn} & \texttt{Real} & \texttt{DataflowConstProp} & \texttt{-disable-\allowbreak{}tail-\allowbreak{}calls} & $+0.377$ & $[+0.244,+0.527]$ & $4.14$ \\
+
+\texttt{fast\_image\_resize} & \texttt{Real} & \texttt{CopyProp} & \texttt{-disable-\allowbreak{}lftr} & $+0.369$ & $[+0.353,+0.386]$ & $5.17$ \\
+
+\texttt{async\_state\_machine} & \texttt{Micro} & \texttt{SingleUseConsts} & \texttt{-disable-\allowbreak{}expand-\allowbreak{}reductions} & $-0.257$ & $[-0.341,-0.166]$ & $26.45$ \\
+
+\texttt{loop\_hoisting} & \texttt{Micro} & \texttt{EnumSizeOpt} & \texttt{-disable-\allowbreak{}nounwind-\allowbreak{}inference} & $-0.247$ & $[-0.255,-0.239]$ & $4.91$ \\
+
+\texttt{iterator\_pipeline} & \texttt{Micro} & \texttt{JumpThreading} & \texttt{-disable-\allowbreak{}expand-\allowbreak{}reductions} & $+0.236$ & $[+0.215,+0.257]$ & $6.77$ \\
+
+\texttt{trait\_monomorphization} & \texttt{Micro} & \texttt{JumpThreading} & \texttt{-disable-\allowbreak{}ssc} & $-0.229$ & $[-0.238,-0.220]$ & $96.23$ \\
+
+\texttt{branch\_cfg} & \texttt{Micro} & \texttt{ReferencePropagation} & \texttt{-disable-\allowbreak{}ondemand-\allowbreak{}mds-\allowbreak{}loading} & $-0.218$ & $[-0.320,-0.112]$ & $65.74$ \\
+
+\texttt{image} & \texttt{Real} & \texttt{JumpThreading} & \texttt{-disable-\allowbreak{}machine-\allowbreak{}licm} & $-0.213$ & $[-0.239,-0.186]$ & $11.20$ \\
+\hline
+\end{tabular}%
+}
+\vspace{1mm}
+\begin{minipage}{0.98\textwidth}
+\footnotesize
+\textit{Note:} The BH-adjusted $q$-values in the last column are reported in units of $10^{-5}$; multiply each displayed value by $10^{-5}$ to obtain the unscaled $q$-value. For example, 6.28 corresponds to $6.28\times10^{-5}$.
+\end{minipage}
+\end{table*}

@@ -1,0 +1,525 @@
+bat     437    42.087753:   10204081 cycles:Pu: 
+
+bat     436    42.105161:   10204081 cycles:Pu: 
+
+bat     436    42.107676:    9036401 cycles:Pu: 
+	ffffffffa8001320 [unknown] ([unknown])
+
+bat     436    42.136707:   14011418 cycles:Pu: 
+
+bat     436    42.203495:   26864827 cycles:Pu: 
+
+bat     436    42.269875:   36478899 cycles:Pu: 
+
+bat     436    42.328136:   39777191 cycles:Pu: 
+
+bat     436    42.439644:   47298048 cycles:Pu: 
+
+bat     436    42.453096:   51840205 cycles:Pu: 
+
+bat     436    42.480854:   60628385 cycles:Pu: 
+
+bat     436    42.527938:   66850924 cycles:Pu: 
+
+bat     436    42.565240:   71498638 cycles:Pu: 
+
+bat     436    42.590556:   76964542 cycles:Pu: 
+
+bat     436    42.612540:   68189691 cycles:Pu: 
+
+bat     436    42.632926:   65224755 cycles:Pu: 
+
+bat     436    42.652236:   65245255 cycles:Pu: 
+
+bat     436    42.882209:   10204081 cycles:Pu: 
+
+bat     436    42.904664:   13372837 cycles:Pu: 
+
+bat     436    42.931282:   16351892 cycles:Pu: 
+
+bat     436    42.966426:   10204081 cycles:Pu: 
+
+bat     436    42.987564:   13299682 cycles:Pu: 
+
+bat     436    43.016879:   18913479 cycles:Pu: 
+
+bat     436    43.046288:   18044898 cycles:Pu: 
+
+bat     436    43.088556:   20278893 cycles:Pu: 
+
+bat     436    43.126515:   22199227 cycles:Pu: 
+
+bat     436    43.163539:   23652214 cycles:Pu: 
+
+bat     436    43.200792:   23652214 cycles:Pu: 
+
+bat     436    43.277587:   46766816 cycles:Pu: 
+
+bat     436    43.332045:   33211729 cycles:Pu: 
+
+bat     436    43.390431:   36212016 cycles:Pu: 
+
+bat     436    43.455562:   39497900 cycles:Pu: 
+
+bat     436    43.531717:   47199984 cycles:Pu: 
+
+bat     436    43.570584:   30897979 cycles:Pu: 
+
+bat     436    43.629344:   36020217 cycles:Pu: 
+
+bat     436    43.654228:   10204081 cycles:Pu: 
+
+bat     436    43.671013:   10204081 cycles:Pu: 
+
+bat     436    43.698063:   16851536 cycles:Pu: 
+
+bat     436    43.726195:   16851536 cycles:Pu: 
+
+bat     436    43.779058:   33572888 cycles:Pu: 
+
+bat     436    43.860143:   50189137 cycles:Pu: 
+
+bat     436    43.928921:   42012687 cycles:Pu: 
+
+bat     436    44.012043:   51015974 cycles:Pu: 
+
+bat     436    44.060598:   38228349 cycles:Pu: 
+
+bat     436    44.122476:   41133680 cycles:Pu: 
+
+bat     436    44.252654:   82704171 cycles:Pu: 
+
+bat     436    44.327203:   35318092 cycles:Pu: 
+
+bat     436    44.375174:   32503064 cycles:Pu: 
+
+bat     436    44.432834:   36480154 cycles:Pu: 
+
+bat     436    44.499130:   45181580 cycles:Pu: 
+
+bat     436    44.552407:   36942817 cycles:Pu: 
+
+bat     436    44.609781:   43750922 cycles:Pu: 
+
+bat     436    44.678960:   46377719 cycles:Pu: 
+
+bat     436    44.752929:   37183667 cycles:Pu: 
+
+bat     436    44.807518:   36452746 cycles:Pu: 
+
+bat     436    44.841582:   66969140 cycles:Pu: 
+
+bat     436    44.929619:   38691028 cycles:Pu: 
+
+bat     436    45.002981:   47728566 cycles:Pu: 
+
+bat     436    45.105630:   49846002 cycles:Pu: 
+
+bat     436    45.115122:   39679801 cycles:Pu: 
+
+bat     436    45.194609:   48271021 cycles:Pu: 
+
+bat     436    45.241050:   28944361 cycles:Pu: 
+
+bat     436    45.297719:   34871445 cycles:Pu: 
+
+bat     436    45.345308:   29997027 cycles:Pu: 
+
+bat     436    45.399680:   34933359 cycles:Pu: 
+
+bat     436    45.470869:   45417532 cycles:Pu: 
+
+bat     436    45.528075:   39885981 cycles:Pu: 
+
+bat     436    45.606026:   52042006 cycles:Pu: 
+
+bat     436    45.668619:   40401649 cycles:Pu: 
+
+bat     436    45.731574:   40411294 cycles:Pu: 
+
+bat     436    45.783320:   33456786 cycles:Pu: 
+
+bat     436    45.847069:   40046835 cycles:Pu: 
+
+bat     436    45.920081:   46394467 cycles:Pu: 
+
+bat     436    46.006623:   54400435 cycles:Pu: 
+
+bat     436    46.070659:   27370540 cycles:Pu: 
+
+bat     436    46.129496:   36962679 cycles:Pu: 
+
+bat     436    46.169412:   25020649 cycles:Pu: 
+
+bat     436    46.284199:   62762359 cycles:Pu: 
+
+bat     436    46.347019:   26349972 cycles:Pu: 
+
+bat     436    46.405927:   36899399 cycles:Pu: 
+
+bat     436    46.469569:   41190316 cycles:Pu: 
+
+bat     436    46.514479:   32132484 cycles:Pu: 
+
+bat     436    46.631186:   52635069 cycles:Pu: 
+
+bat     436    46.687280:   49164019 cycles:Pu: 
+
+bat     436    46.735513:   32952712 cycles:Pu: 
+
+bat     436    46.793367:   36879319 cycles:Pu: 
+
+bat     436    46.862387:   46015584 cycles:Pu: 
+
+bat     436    46.923519:   39725613 cycles:Pu: 
+
+bat     436    47.019659:   58327955 cycles:Pu: 
+
+bat     436    47.109937:   55975030 cycles:Pu: 
+
+bat     436    47.233362:   77310617 cycles:Pu: 
+
+bat     436    47.316438:   82475701 cycles:Pu: 
+
+bat     436    47.390806:   46049021 cycles:Pu: 
+
+bat     436    47.454719:   39846602 cycles:Pu: 
+
+bat     436    47.532591:   41656033 cycles:Pu: 
+
+bat     436    47.592820:   35656132 cycles:Pu: 
+
+bat     436    47.632196:   38507730 cycles:Pu: 
+
+bat     436    47.688036:   33529545 cycles:Pu: 
+
+bat     436    47.791148:   38829719 cycles:Pu: 
+
+bat     436    47.854872:   40790625 cycles:Pu: 
+
+bat     436    47.909735:   32518334 cycles:Pu: 
+
+bat     436    47.964291:   33819431 cycles:Pu: 
+
+bat     436    48.014578:   29896955 cycles:Pu: 
+
+bat     436    48.108482:   37765397 cycles:Pu: 
+
+bat     436    48.176433:   41127505 cycles:Pu: 
+
+bat     436    48.255421:   46442220 cycles:Pu: 
+
+bat     436    48.350952:   50744398 cycles:Pu: 
+
+bat     436    48.440762:   53759403 cycles:Pu: 
+
+bat     436    48.526343:   55185850 cycles:Pu: 
+
+bat     436    48.625350:   42646506 cycles:Pu: 
+
+bat     436    48.687862:   41059663 cycles:Pu: 
+
+bat     436    48.723871:   68269699 cycles:Pu: 
+
+bat     436    48.828898:   69018134 cycles:Pu: 
+
+bat     436    48.897929:   42889703 cycles:Pu: 
+
+bat     436    48.978177:   51051337 cycles:Pu: 
+
+bat     436    49.013818:   39853192 cycles:Pu: 
+
+bat     436    49.092353:   49903482 cycles:Pu: 
+
+bat     436    49.216424:   54468009 cycles:Pu: 
+
+bat     436    49.266807:   31501610 cycles:Pu: 
+
+bat     436    49.322655:   34857345 cycles:Pu: 
+
+bat     436    49.375701:   33398498 cycles:Pu: 
+
+bat     436    49.431831:   35154014 cycles:Pu: 
+
+bat     436    49.499813:   45103188 cycles:Pu: 
+
+bat     436    49.593928:   59907964 cycles:Pu: 
+
+bat     436    49.663392:   47369862 cycles:Pu: 
+
+bat     436    49.742274:   46790663 cycles:Pu: 
+
+bat     436    49.844187:   58626325 cycles:Pu: 
+
+bat     436    49.945764:   63897511 cycles:Pu: 
+
+bat     436    50.047911:   55911075 cycles:Pu: 
+
+bat     436    50.144006:   62774753 cycles:Pu: 
+
+bat     436    50.228272:   49947606 cycles:Pu: 
+
+bat     436    50.330023:   63141710 cycles:Pu: 
+
+bat     436    50.375948:   53613906 cycles:Pu: 
+
+bat     436    50.472868:   52355895 cycles:Pu: 
+
+bat     436    50.570549:   60665274 cycles:Pu: 
+
+bat     436    50.654568:   51156826 cycles:Pu: 
+
+bat     436    50.730406:   46602922 cycles:Pu: 
+
+bat     436    50.802730:   44417377 cycles:Pu: 
+
+bat     436    50.877028:   57204269 cycles:Pu: 
+
+bat     436    50.941731:   45877174 cycles:Pu: 
+
+bat     436    51.041255:   61205464 cycles:Pu: 
+
+bat     436    51.118389:   47696040 cycles:Pu: 
+
+bat     436    51.183240:   41576125 cycles:Pu: 
+
+bat     436    51.265632:   52596778 cycles:Pu: 
+
+bat     436    51.337945:   44830324 cycles:Pu: 
+
+bat     436    51.401096:   39184938 cycles:Pu: 
+
+bat     436    51.455613:   34290486 cycles:Pu: 
+
+bat     436    51.505842:   31308981 cycles:Pu: 
+
+bat     436    51.567181:   38923931 cycles:Pu: 
+
+bat     436    51.659894:   43486492 cycles:Pu: 
+
+bat     436    51.737634:   47848457 cycles:Pu: 
+
+bat     436    51.792357:   35848433 cycles:Pu: 
+
+bat     436    51.877618:   51350928 cycles:Pu: 
+
+bat     436    51.950419:   44846005 cycles:Pu: 
+
+bat     436    52.008508:   36337474 cycles:Pu: 
+
+bat     436    52.073466:   41128301 cycles:Pu: 
+
+bat     436    52.154945:   52045918 cycles:Pu: 
+
+bat     436    52.231491:   48289636 cycles:Pu: 
+
+bat     436    52.335449:   66614339 cycles:Pu: 
+
+bat     436    52.420792:   52975971 cycles:Pu: 
+
+bat     436    52.497795:   48105158 cycles:Pu: 
+
+bat     436    52.589062:   56558455 cycles:Pu: 
+
+bat     436    52.669212:   49309972 cycles:Pu: 
+
+bat     436    52.778572:   47766182 cycles:Pu: 
+
+bat     436    52.875093:   59406476 cycles:Pu: 
+
+bat     436    52.951854:   47282586 cycles:Pu: 
+
+bat     436    53.035022:   52162343 cycles:Pu: 
+
+bat     436    53.128659:   61651941 cycles:Pu: 
+
+bat     436    53.314370:   45535269 cycles:Pu: 
+
+bat     436    53.463535:   57927828 cycles:Pu: 
+
+bat     436    53.539711:   50164867 cycles:Pu: 
+
+bat     436    53.591801:   32928059 cycles:Pu: 
+
+bat     436    53.646032:   34489391 cycles:Pu: 
+
+bat     436    53.701847:   36145748 cycles:Pu: 
+
+bat     436    53.764000:   42961339 cycles:Pu: 
+
+bat     436    53.829368:   44496490 cycles:Pu: 
+
+bat     436    53.917591:   48980879 cycles:Pu: 
+
+bat     436    53.933811:   44386320 cycles:Pu: 
+
+bat     436    53.983276:   29835717 cycles:Pu: 
+
+bat     436    54.044222:   39705723 cycles:Pu: 
+
+bat     436    54.120215:   45479674 cycles:Pu: 
+
+bat     436    54.200195:   47238625 cycles:Pu: 
+
+bat     436    54.269098:   41915407 cycles:Pu: 
+
+bat     436    54.337005:   41912393 cycles:Pu: 
+
+bat     436    54.401746:   39287225 cycles:Pu: 
+
+bat     436    54.460208:   35080145 cycles:Pu: 
+
+bat     436    54.518261:   38007728 cycles:Pu: 
+
+bat     436    54.634526:   35518846 cycles:Pu: 
+
+bat     436    54.686068:   34215746 cycles:Pu: 
+
+bat     436    54.758959:   43966820 cycles:Pu: 
+
+bat     436    54.794006:   40728247 cycles:Pu: 
+
+bat     436    54.836587:   25107053 cycles:Pu: 
+
+bat     436    54.927580:   38866606 cycles:Pu: 
+
+bat     436    54.943027:   30609919 cycles:Pu: 
+
+bat     436    54.987413:   26250370 cycles:Pu: 
+
+bat     436    55.030639:   26250370 cycles:Pu: 
+
+bat     436    55.155534:   45279380 cycles:Pu: 
+
+bat     436    55.230797:   43227855 cycles:Pu: 
+
+bat     436    55.282821:   31213813 cycles:Pu: 
+
+bat     436    55.334769:   31676554 cycles:Pu: 
+
+bat     436    55.412878:   48126533 cycles:Pu: 
+
+bat     436    55.479506:   41772712 cycles:Pu: 
+
+bat     436    55.533433:   45325856 cycles:Pu: 
+
+bat     436    55.667040:   44284410 cycles:Pu: 
+
+bat     436    55.717952:   30596027 cycles:Pu: 
+
+bat     436    55.754263:   23927269 cycles:Pu: 
+
+bat     436    55.797670:   30179283 cycles:Pu: 
+
+bat     436    55.914644:   73709457 cycles:Pu: 
+
+bat     436    56.002262:   53794357 cycles:Pu: 
+
+bat     436    56.060464:   43661775 cycles:Pu: 
+
+bat     436    56.127295:   42726803 cycles:Pu: 
+
+bat     436    56.196326:   42620041 cycles:Pu: 
+
+bat     436    56.242597:   28150297 cycles:Pu: 
+
+bat     436    56.307301:   40271508 cycles:Pu: 
+
+bat     436    56.376694:   42135784 cycles:Pu: 
+
+bat     436    56.446225:   43893752 cycles:Pu: 
+
+bat     436    56.595645:   66127897 cycles:Pu: 
+
+bat     436    56.674010:   49377287 cycles:Pu: 
+
+bat     436    56.747397:   45534383 cycles:Pu: 
+
+bat     436    56.820223:   45221234 cycles:Pu: 
+
+bat     436    56.886960:   42394591 cycles:Pu: 
+
+bat     436    56.960826:   73492778 cycles:Pu: 
+
+bat     436    57.074789:   75748068 cycles:Pu: 
+
+bat     436    57.139198:   41304629 cycles:Pu: 
+
+bat     436    57.188466:   47789385 cycles:Pu: 
+
+bat     436    57.261507:   31322892 cycles:Pu: 
+
+bat     436    57.326074:   39014197 cycles:Pu: 
+
+bat     436    57.383767:   43390930 cycles:Pu: 
+
+bat     436    57.466073:   50611039 cycles:Pu: 
+
+bat     436    57.542954:   47452908 cycles:Pu: 
+
+bat     436    57.619959:   48115002 cycles:Pu: 
+
+bat     436    57.688381:   42350879 cycles:Pu: 
+
+bat     436    57.743353:   47957471 cycles:Pu: 
+
+bat     436    57.813503:   48161900 cycles:Pu: 
+
+bat     436    57.878282:   35855175 cycles:Pu: 
+
+bat     436    57.955464:   48143041 cycles:Pu: 
+
+bat     436    58.016363:   66316618 cycles:Pu: 
+
+bat     436    58.066172:   33988014 cycles:Pu: 
+
+bat     436    58.124591:   51495742 cycles:Pu: 
+
+bat     436    58.204874:   50363511 cycles:Pu: 
+
+bat     436    58.291588:   43143530 cycles:Pu: 
+
+bat     436    58.343672:   32058773 cycles:Pu: 
+
+bat     436    58.389283:   27671512 cycles:Pu: 
+
+bat     436    58.433842:   27063468 cycles:Pu: 
+
+bat     436    58.492339:   37007731 cycles:Pu: 
+
+bat     436    58.561645:   42123905 cycles:Pu: 
+
+bat     436    58.639941:   48333998 cycles:Pu: 
+
+bat     436    58.747551:   43752610 cycles:Pu: 
+
+bat     436    58.805348:   52741246 cycles:Pu: 
+
+bat     436    58.909205:   39722840 cycles:Pu: 
+
+bat     436    58.944641:   68063103 cycles:Pu: 
+
+bat     436    59.021598:   47208599 cycles:Pu: 
+
+bat     436    59.090790:   43394260 cycles:Pu: 
+
+bat     436    59.148031:   35800253 cycles:Pu: 
+
+bat     436    59.217780:   44193395 cycles:Pu: 
+
+bat     436    59.321343:   48802710 cycles:Pu: 
+
+bat     436    59.407164:   52470972 cycles:Pu: 
+
+bat     436    59.504189:   60759654 cycles:Pu: 
+
+bat     436    59.595015:   57337214 cycles:Pu: 
+
+bat     436    59.648272:   43874790 cycles:Pu: 
+
+bat     436    59.709440:   38048149 cycles:Pu: 
+
+bat     436    59.759516:   32404953 cycles:Pu: 
+
+bat     436    59.856641:   36126226 cycles:Pu: 
+

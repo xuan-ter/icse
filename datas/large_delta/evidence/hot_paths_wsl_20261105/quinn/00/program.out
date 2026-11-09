@@ -1,0 +1,16 @@
+
+Client 0 stats:
+Overall download stats:
+
+Transferred 67108864 bytes on 1 streams in 134.67ms (475.25 MiB/s)
+
+Stream download metrics:
+
+      │  Throughput   │ Duration 
+──────┼───────────────┼──────────
+ AVG  │  479.12 MiB/s │  133.00ms
+ P0   │  479.00 MiB/s │  133.00ms
+ P10  │  479.25 MiB/s │  133.00ms
+ P50  │  479.25 MiB/s │  133.00ms
+ P90  │  479.25 MiB/s │  133.00ms
+ P100 │  479.25 MiB/s │  133.00ms

@@ -1,0 +1,2 @@
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.156 MB /tmp/perf_quinn_10.data (17 samples) ]

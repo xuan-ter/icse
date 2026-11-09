@@ -1,0 +1,3 @@
+fddca4790d4dfeed9a4a0632fb010a8c3547d56a /mnt/d/MIR_LLVM_NEW/large_delta_case_studies/evidence/representative_runs/run_20261023_full_graph/cases/01_ripgrep/11/compiler_artifacts/rg
+de17a562c219da52bb9bb56182d657b775f45676 [kernel.kallsyms]
+0993fa7e87a2cdb8c821181ba07bd0865aa971f4 [vdso]
