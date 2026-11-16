@@ -50,7 +50,7 @@ Representative experiment drivers currently present in the workspace include:
 - `serde\experiment_expanded_llvm_mir.py`
 - `image\experiment_image_mir_llvm_hybrid.py`
 - `fast_image_resize\experiment_fast_image_resize.py`
-- `trait_test\experiment_trait_mir_llvm_hybrid.py`
+- `trait_monomorphization_bench\experiment_trait_mir_llvm_hybrid.py`
 - `aggregate_scalarization_bench\experiment_aggregate_scalarization_mir_llvm.py`
 - `async_state_machine_bench\experiment_async_state_machine_mir_llvm.py`
 - `branch_cfg_bench\experiment_cfg_mir_llvm_hybrid.py`
@@ -75,7 +75,7 @@ The main project directories currently covered by this workflow are:
 - `rustls`
 - `serde`
 - `tokio`
-- `trait_test`
+- `trait_monomorphization_bench`
 
 ### 2.1 Pass List and Experiment Matrix
 

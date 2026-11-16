@@ -1,9 +1,7 @@
 ﻿import os
 
-import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import seaborn as sns
 
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -17,14 +15,18 @@ os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 def normalize_pass_names(df):
     """
-    Normalize baseline spellings so the all-off baseline becomes (None, None).
+    Normalize the optimized baseline to (None, None) while keeping global
+    all-disabled controls distinct so they cannot contaminate the 2x2 baseline.
     """
 
     def clean_name(name):
         if pd.isna(name):
             return "None"
         s = str(name).strip()
-        if s.lower() in {"none", "baseline", "nan", "", "n/a", "na", "all"}:
+        if s.lower() == "all":
+            # Keep global all-off controls distinct from the optimized baseline.
+            return "__ALL_DISABLED__"
+        if s.lower() in {"none", "baseline", "nan", "", "n/a", "na"}:
             return "None"
         return s
 
@@ -172,8 +174,12 @@ def analyze_interactions(raw_df, metric="TotalRuntime(s)", n_bootstrap=BOOTSTRAP
     """
     samples_lookup = build_variant_samples_lookup(raw_df, metric)
     variants = sorted(raw_df["Variant"].unique())
-    mir_passes = sorted({mir for _, mir, llvm in samples_lookup.keys() if mir != "None" and llvm == "None"})
-    llvm_passes = sorted({llvm for _, mir, llvm in samples_lookup.keys() if mir == "None" and llvm != "None"})
+    mir_passes = sorted(
+        {mir for _, mir, llvm in samples_lookup.keys() if mir not in {"None", "__ALL_DISABLED__"} and llvm == "None"}
+    )
+    llvm_passes = sorted(
+        {llvm for _, mir, llvm in samples_lookup.keys() if mir == "None" and llvm not in {"None", "__ALL_DISABLED__"}}
+    )
 
     print(f"Found {len(variants)} variants, {len(mir_passes)} MIR passes, and {len(llvm_passes)} LLVM passes.")
     expected_pairs = len(mir_passes) * len(llvm_passes)
@@ -257,6 +263,8 @@ def analyze_interactions(raw_df, metric="TotalRuntime(s)", n_bootstrap=BOOTSTRAP
 
 
 def plot_forest(results_df):
+    import matplotlib.pyplot as plt
+
     top_k = (
         results_df[results_df["significant"]]
         .sort_values("abs_delta", ascending=False)
@@ -320,6 +328,9 @@ def main():
         f"{summary['negative_highlighted_count']} negative, "
         f"{summary['positive_highlighted_count']} positive"
     )
+
+    import matplotlib.pyplot as plt
+    import seaborn as sns
 
     pivot_delta = results_df.pivot(index="mir_pass", columns="llvm_pass", values="delta")
     plt.figure(figsize=(16, 10))

@@ -5,7 +5,7 @@ extern crate test;
 use std::hint::black_box;
 use test::Bencher;
 
-use trait_test::{kernel_easy, kernel_mir_dependent, LayeredOp, SimpleOp};
+use trait_monomorphization_bench::{kernel_easy, kernel_mir_dependent, LayeredOp, SimpleOp};
 
 fn make_data(len: usize, seed: u32) -> Vec<u32> {
     let mut x = seed;

@@ -180,7 +180,7 @@ def dump_ir_sample(combo, bench_name, base_out, logf, passes):
         logf.flush()
         return False
 
-    wanted = ["trait_test", "kernel_", "wrap_", "apply_", "transform"]
+    wanted = ["trait_monomorphization_bench", "kernel_", "wrap_", "apply_", "transform"]
     filtered = extract_ir_blocks(r.stderr or "", wanted)
     filtered_path = os.path.join(ir_dir, f"{name}__{group}__filtered_ir_dump.txt")
     with open(filtered_path, "w", encoding="utf-8") as f:

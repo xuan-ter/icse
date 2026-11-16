@@ -2,7 +2,7 @@ use std::env;
 use std::hint::black_box;
 use std::process::ExitCode;
 
-use trait_test::{kernel_easy, kernel_mir_dependent, LayeredOp, SimpleOp};
+use trait_monomorphization_bench::{kernel_easy, kernel_mir_dependent, LayeredOp, SimpleOp};
 
 const LEN: usize = 4096;
 const ROUNDS: u32 = 64;

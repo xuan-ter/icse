@@ -42,6 +42,7 @@ Representative experiment entry-point scripts currently in the workspace include
 - `quinn\experiment_quinn_mir_llvm_hybrid.py`
 - `aho-corasick\experiment_aho_mir_llvm_hybrid.py`
 - `loop_hoisting_bench\experiment_loop_mir_llvm_hybrid.py`
+- `trait_monomorphization_bench\experiment_trait_mir_llvm_hybrid.py`
 
 ### 2.1 Pass List and Experiment Matrix
 

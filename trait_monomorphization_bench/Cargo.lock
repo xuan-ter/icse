@@ -3,5 +3,5 @@
 version = 4
 
 [[package]]
-name = "trait_test"
+name = "trait_monomorphization_bench"
 version = "0.1.0"
