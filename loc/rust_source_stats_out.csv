@@ -1,4 +1,4 @@
-﻿aggregate_scalarization_bench,1,100
+aggregate_scalarization_bench,1,100
 aho-corasick,32,20938
 async_state_machine_bench,1,142
 bat,40,11019
@@ -13,6 +13,6 @@ quinn,78,38929
 regex,130,144255
 ripgrep,60,32497
 rustls,132,60586
-serde,1,71
+serde,57,26461
 tokio,489,124452
-trait_test,2,163
+trait_monomorphization_bench,2,163
